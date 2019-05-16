@@ -23,11 +23,34 @@ public class ElevatorCommand extends Command {
     // Called just before this Command runs the first time
     @Override
     protected void initialize() {
+        Robot.Elevator.stop();
     }
 
     // Called repeatedly when this Command is scheduled to run
     @Override
     protected void execute() {
+        // Manual Elevator drive
+        if(Robot.m_oi.getController().getRightTrigger() != 0){
+            Robot.Elevator.setDriveMode(Robot.Elevator.DriveModes.MANUAL);
+            Robot.Elevator.driveElevatorByDirection(Robot.Elevator.ElevatorDirection.UP);
+        } else if(Robot.m_oi.getController().getLeftTrigger() != 0){
+            Robot.Elevator.setDriveMode(Robot.Elevator.DriveModes.MANUAL);
+            Robot.Elevator.driveElevatorByDirection(Robot.Elevator.ElevatorDirection.DOWN);
+        } else { // Auto PID Elevator drive
+            if(Robot.m_oi.getController().getRightBumperPressed()){
+                
+            } else if(Robot.m_oi.getController().getLeftBumperPressed()){
+
+            } else if(Robot.Elevator.getDriveMode() == Robot.Elevator.DriveModes.MANUAL){
+                Robot.Elevator.stop();
+            }
+        }
+
+        
+
+
+
+
     }
 
     // Make this return true when this Command no longer needs to run execute()

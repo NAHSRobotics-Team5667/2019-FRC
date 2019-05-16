@@ -16,20 +16,27 @@ import frc.robot.commands.ElevatorCommand;
  * A Linear elevator elevator subsystem
  */
 public class ElevatorSubsystem extends Subsystem {
-
-    private double[] d_levels = { 0, .95, 1.45 };
-
+    // Constants
     private final double k_PULLEY_CIRCUMFERENCE = .102;
     private final double k_GEAR_RATIO = 64;
     private final double k_PULESES_PER_REVOLUTION = 1024;
+    // Rocket levels based on height in relation to encoder ticks
+    private double[] d_levels = { 0, .95, 1.45 };
 
+    // The rocket levels
     public static enum Levels {
         ONE, TWO, THREE;
     }
-
+    // The direction the elevator can travel in
     public static enum ElevatorDirection {
         UP, DOWN;
     }
+
+    public static enum DriveModes {
+        MANUAL, AUTO;
+    }
+
+    private DriveModes driveMode = DriveModes.MANUAL;
 
     private PWMTalonSRX m_motor; // The elevator motor
 
@@ -176,6 +183,36 @@ public class ElevatorSubsystem extends Subsystem {
      */
     public void setCurrentLevel(Levels level) {
         m_level = level;
+    }
+
+    public void increaseLevel(){
+        setCurrentLevel((m_level == Levels.ONE) ? Levels.TWO : Levels.THREE);
+    }
+
+    public void decreaseLevel(){
+        Levels level = (m_level == Levels.THREE) ? Levels.TWO : Levels.ONE);
+        if(m_level != level) {
+            setCurrentLevel(level);
+        }
+    }
+
+
+    /**
+     * Set the current auto mode  
+     * 
+     * @param mode - The Drive mode for the elevator (MANUAL or AUTO)
+     */
+    public void setDriveMode(DriveModes mode){
+        this.driveMode = mode;
+    }
+
+    /**
+     * Get the elevator's current drive mode
+     * 
+     * @return The elevator's current drive mode (MANUAL or AUTO)
+     */
+    public DriveModes getDriveMode(){
+        return this.driveMode;
     }
 
 }

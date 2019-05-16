@@ -126,8 +126,8 @@ public class PIDFController {
      * @return The output
      */
     public double calculate(double input) {
-        double output = 0;
-        return output;
+        double error = this.setpoint - input;
+        return kF + ((error * kP) + (error * kI) + (error * kD));
     }
 
 }
