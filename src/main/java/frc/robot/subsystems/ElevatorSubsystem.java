@@ -27,6 +27,7 @@ public class ElevatorSubsystem extends Subsystem {
     public static enum Levels {
         ONE, TWO, THREE;
     }
+
     // The direction the elevator can travel in
     public static enum ElevatorDirection {
         UP, DOWN;
@@ -185,24 +186,23 @@ public class ElevatorSubsystem extends Subsystem {
         m_level = level;
     }
 
-    public void increaseLevel(){
+    public void increaseLevel() {
         setCurrentLevel((m_level == Levels.ONE) ? Levels.TWO : Levels.THREE);
     }
 
-    public void decreaseLevel(){
-        Levels level = (m_level == Levels.THREE) ? Levels.TWO : Levels.ONE);
-        if(m_level != level) {
+    public void decreaseLevel() {
+        Levels level = (m_level == Levels.THREE) ? Levels.TWO : Levels.ONE;
+        if (m_level != level) {
             setCurrentLevel(level);
         }
     }
 
-
     /**
-     * Set the current auto mode  
+     * Set the current auto mode
      * 
      * @param mode - The Drive mode for the elevator (MANUAL or AUTO)
      */
-    public void setDriveMode(DriveModes mode){
+    public void setDriveMode(DriveModes mode) {
         this.driveMode = mode;
     }
 
@@ -211,7 +211,7 @@ public class ElevatorSubsystem extends Subsystem {
      * 
      * @return The elevator's current drive mode (MANUAL or AUTO)
      */
-    public DriveModes getDriveMode(){
+    public DriveModes getDriveMode() {
         return this.driveMode;
     }
 

@@ -35,7 +35,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        m_oi = new OI();
+        m_oi = new OI(RobotMap.controllerPort);
 
         Elevator = new ElevatorSubsystem(RobotMap.ElevatorPWM, false);
 
