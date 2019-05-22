@@ -11,208 +11,199 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.subsystems.ElevatorConstants.DriveModes;
+import frc.robot.subsystems.ElevatorConstants.ElevatorDirection;
+import frc.robot.subsystems.ElevatorConstants.Levels;
 
 /**
  * A Linear elevator elevator subsystem
  */
 public class ElevatorSubsystem extends Subsystem {
-    // Constants
-    private final double k_PULLEY_CIRCUMFERENCE = .102;
-    private final double k_GEAR_RATIO = 64;
-    private final double k_PULESES_PER_REVOLUTION = 1024;
-    // Rocket levels based on height in relation to encoder ticks
-    private double[] d_levels = { 0, .95, 1.45 };
+	// Constants
+	private final double k_PULLEY_CIRCUMFERENCE = .102;
+	private final double k_GEAR_RATIO = 64;
+	private final double k_PULESES_PER_REVOLUTION = 1024;
+	// Rocket levels based on height in relation to encoder ticks
+	private double[] d_levels = { 0, .95, 1.45 };
 
-    // The rocket levels
-    public static enum Levels {
-        ONE, TWO, THREE;
-    }
+	// The rocket levels
 
-    // The direction the elevator can travel in
-    public static enum ElevatorDirection {
-        UP, DOWN;
-    }
+	private DriveModes driveMode = DriveModes.MANUAL;
 
-    public static enum DriveModes {
-        MANUAL, AUTO;
-    }
+	private PWMTalonSRX m_motor; // The elevator motor
 
-    private DriveModes driveMode = DriveModes.MANUAL;
+	private double m_speedUp = 1; // The motor speed when the elevator is traveling up
+	private double m_speedDown = -.7; // The motor speed when elevator is traveling down
 
-    private PWMTalonSRX m_motor; // The elevator motor
+	private Levels m_level = Levels.ONE;
 
-    private double m_speedUp = 1; // The motor speed when the elevator is traveling up
-    private double m_speedDown = -.7; // The motor speed when elevator is traveling down
+	private Encoder encoder;
 
-    private Levels m_level = Levels.ONE;
+	@Override
+	public void initDefaultCommand() {
+		// Set the default command for a subsystem here.
+		setDefaultCommand(new ElevatorCommand());
+	}
 
-    private Encoder encoder;
+	/**
+	 * A linear elevator elevator subsystem
+	 * 
+	 * @param id         - The linear elevator motor PWM port on the roborio
+	 * @param isInverted - Is the motor inverted
+	 * @param speedUp    - The motor speed when the elevator is traveling up
+	 * @param speedDown  - The motor speed when elevator is traveling down
+	 * @param d_levels   - The height in meters in relation to encoder ticks for
+	 *                   each level of the rocket.
+	 * @param encoder    - The elevator encoder
+	 */
+	public ElevatorSubsystem(int id, boolean isInverted, double speedUp, double speedDown, double[] d_levels,
+			Encoder encoder) {
+		this.m_motor = new PWMTalonSRX(id);
+		this.m_motor.setInverted(isInverted);
 
-    @Override
-    public void initDefaultCommand() {
-        // Set the default command for a subsystem here.
-        setDefaultCommand(new ElevatorCommand());
-    }
+		this.m_speedUp = speedUp;
+		this.m_speedDown = speedDown;
 
-    /**
-     * A linear elevator elevator subsystem
-     * 
-     * @param id         - The linear elevator motor PWM port on the roborio
-     * @param isInverted - Is the motor inverted
-     * @param speedUp    - The motor speed when the elevator is traveling up
-     * @param speedDown  - The motor speed when elevator is traveling down
-     * @param d_levels   - The height in meters in relation to encoder ticks for
-     *                   each level of the rocket.
-     * @param encoder    - The elevator encoder
-     */
-    public ElevatorSubsystem(int id, boolean isInverted, double speedUp, double speedDown, double[] d_levels,
-            Encoder encoder) {
-        this.m_motor = new PWMTalonSRX(id);
-        this.m_motor.setInverted(isInverted);
+		this.d_levels = d_levels;
 
-        this.m_speedUp = speedUp;
-        this.m_speedDown = speedDown;
+		this.encoder = encoder;
 
-        this.d_levels = d_levels;
+	}
 
-        this.encoder = encoder;
+	/**
+	 * A linear elevator elevator subsystem
+	 * 
+	 * @param id         - The linear elevator motor PWM port on the roborio
+	 * @param isInverted - Is the motor inverted
+	 * 
+	 **/
+	public ElevatorSubsystem(int id, boolean isInverted) {
+		this.m_motor = new PWMTalonSRX(id);
+		this.m_motor.setInverted(isInverted);
+	}
 
-    }
+	/**
+	 * A Linear elevator elevator subsystem
+	 * 
+	 * @param id - The linear elevator motor PWM port on the roborio
+	 */
+	public ElevatorSubsystem(int id) {
+		this.m_motor = new PWMTalonSRX(id);
+	}
 
-    /**
-     * A linear elevator elevator subsystem
-     * 
-     * @param id         - The linear elevator motor PWM port on the roborio
-     * @param isInverted - Is the motor inverted
-     * 
-     **/
-    public ElevatorSubsystem(int id, boolean isInverted) {
-        this.m_motor = new PWMTalonSRX(id);
-        this.m_motor.setInverted(isInverted);
-    }
+	/**
+	 * Set the levels for the rocket based on height
+	 * 
+	 * @param d_levels - A double array where the first index is the home state and
+	 *                 the last index is the third level of the rocket
+	 */
+	public void setLevels(double[] levels) {
+		d_levels = levels;
+	}
 
-    /**
-     * A Linear elevator elevator subsystem
-     * 
-     * @param id - The linear elevator motor PWM port on the roborio
-     */
-    public ElevatorSubsystem(int id) {
-        this.m_motor = new PWMTalonSRX(id);
-    }
+	/**
+	 * Get the height for the level requested
+	 * 
+	 * @param level - The level requested
+	 * @return The height in meters in relation to the encoder ticks for the
+	 *         elevator
+	 */
+	public double getHeightFromLevel(Levels level) {
+		switch (level) {
+		case ONE:
+			return this.d_levels[0];
+		case TWO:
+			return this.d_levels[1];
+		case THREE:
+			return this.d_levels[2];
+		default:
+			return d_levels[0];
+		}
+	}
 
-    /**
-     * Set the levels for the rocket based on height
-     * 
-     * @param d_levels - A double array where the first index is the home state and
-     *                 the last index is the third level of the rocket
-     */
-    public void setLevels(double[] levels) {
-        d_levels = levels;
-    }
+	public double getHeight(Levels level) {
+		// currentEncoderPulses / (pulesesPerRevolution * gear ratio) *
+		// circumferenceOfPulley
+		return (this.encoder.get() / (k_PULESES_PER_REVOLUTION * k_GEAR_RATIO)) * k_PULLEY_CIRCUMFERENCE;
 
-    /**
-     * Get the height for the level requested
-     * 
-     * @param level - The level requested
-     * @return The height in meters in relation to the encoder ticks for the
-     *         elevator
-     */
-    public double getHeightFromLevel(Levels level) {
-        switch (level) {
-        case ONE:
-            return this.d_levels[0];
-        case TWO:
-            return this.d_levels[1];
-        case THREE:
-            return this.d_levels[2];
-        default:
-            return d_levels[0];
-        }
-    }
+	}
 
-    public double getHeight(Levels level) {
-        // currentEncoderPulses / (pulesesPerRevolution * gear ratio) *
-        // circumferenceOfPulley
-        return (this.encoder.get() / (k_PULESES_PER_REVOLUTION * k_GEAR_RATIO)) * k_PULLEY_CIRCUMFERENCE;
+	/**
+	 * Drive the elevator using a custom speed
+	 * 
+	 * @param speed - The elevator speed
+	 */
+	public void driveElevatorBySpeed(double speed) {
+		this.m_motor.set(speed);
+	}
 
-    }
+	/**
+	 * Dirve the elevator using direction
+	 * 
+	 * @param dir - The direction the elevator will be going in
+	 */
+	public void driveElevatorByDirection(ElevatorDirection dir) {
+		this.m_motor.set((dir == ElevatorDirection.UP) ? m_speedUp : m_speedDown);
+	}
 
-    /**
-     * Drive the elevator using a custom speed
-     * 
-     * @param speed - The elevator speed
-     */
-    public void driveElevatorBySpeed(double speed) {
-        this.m_motor.set(speed);
-    }
+	/**
+	 * Move the elevator based on a level you are trying to reach
+	 * 
+	 * @param level         - The desired level
+	 * @param currentHeight - The current height
+	 */
+	public void driveElevatorByLevel(Levels level, double currentHeight) {
+		double targetHeight = this.getHeightFromLevel(level);
+		if (targetHeight > currentHeight) {
+			this.driveElevatorByDirection(ElevatorDirection.DOWN);
+		} else {
+			this.driveElevatorByDirection(ElevatorDirection.UP);
+		}
+	}
 
-    /**
-     * Dirve the elevator using direction
-     * 
-     * @param dir - The direction the elevator will be going in
-     */
-    public void driveElevatorByDirection(ElevatorDirection dir) {
-        this.m_motor.set((dir == ElevatorDirection.UP) ? m_speedUp : m_speedDown);
-    }
+	/**
+	 * Stop the elevator motor
+	 */
+	public void stop() {
+		this.m_motor.stopMotor();
+	}
 
-    /**
-     * Move the elevator based on a level you are trying to reach
-     * 
-     * @param level         - The desired level
-     * @param currentHeight - The current height
-     */
-    public void driveElevatorByLevel(Levels level, double currentHeight) {
-        double targetHeight = this.getHeightFromLevel(level);
-        if (targetHeight > currentHeight) {
-            this.driveElevatorByDirection(ElevatorDirection.DOWN);
-        } else {
-            this.driveElevatorByDirection(ElevatorDirection.UP);
-        }
-    }
+	/**
+	 * Set the current elevator level based on rocket levels
+	 * 
+	 * @param level - The level the elevator is currently on
+	 */
+	public void setCurrentLevel(Levels level) {
+		m_level = level;
+	}
 
-    /**
-     * Stop the elevator motor
-     */
-    public void stop() {
-        this.m_motor.stopMotor();
-    }
+	public void increaseLevel() {
+		setCurrentLevel((m_level == Levels.ONE) ? Levels.TWO : Levels.THREE);
+	}
 
-    /**
-     * Set the current elevator level based on rocket levels
-     * 
-     * @param level - The level the elevator is currently on
-     */
-    public void setCurrentLevel(Levels level) {
-        m_level = level;
-    }
+	public void decreaseLevel() {
+		Levels level = (m_level == Levels.THREE) ? Levels.TWO : Levels.ONE;
+		if (m_level != level) {
+			setCurrentLevel(level);
+		}
+	}
 
-    public void increaseLevel() {
-        setCurrentLevel((m_level == Levels.ONE) ? Levels.TWO : Levels.THREE);
-    }
+	/**
+	 * Set the current auto mode
+	 * 
+	 * @param mode - The Drive mode for the elevator (MANUAL or AUTO)
+	 */
+	public void setDriveMode(DriveModes mode) {
+		this.driveMode = mode;
+	}
 
-    public void decreaseLevel() {
-        Levels level = (m_level == Levels.THREE) ? Levels.TWO : Levels.ONE;
-        if (m_level != level) {
-            setCurrentLevel(level);
-        }
-    }
-
-    /**
-     * Set the current auto mode
-     * 
-     * @param mode - The Drive mode for the elevator (MANUAL or AUTO)
-     */
-    public void setDriveMode(DriveModes mode) {
-        this.driveMode = mode;
-    }
-
-    /**
-     * Get the elevator's current drive mode
-     * 
-     * @return The elevator's current drive mode (MANUAL or AUTO)
-     */
-    public DriveModes getDriveMode() {
-        return this.driveMode;
-    }
+	/**
+	 * Get the elevator's current drive mode
+	 * 
+	 * @return The elevator's current drive mode (MANUAL or AUTO)
+	 */
+	public DriveModes getDriveMode() {
+		return this.driveMode;
+	}
 
 }

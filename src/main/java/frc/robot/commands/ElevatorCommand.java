@@ -9,6 +9,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.subsystems.ElevatorConstants;
+import frc.robot.subsystems.ElevatorConstants.DriveModes;
 import frc.robot.utils.PIDFController;
 
 public class ElevatorCommand extends Command {
@@ -31,17 +33,17 @@ public class ElevatorCommand extends Command {
     protected void execute() {
         // Manual Elevator drive
         if (Robot.m_oi.getController().getRightTrigger() != 0) {
-            Robot.Elevator.setDriveMode(Robot.Elevator.DriveModes.MANUAL);
-            Robot.Elevator.driveElevatorByDirection(Robot.Elevator.ElevatorDirection.UP);
+            Robot.Elevator.setDriveMode(ElevatorConstants.DriveModes.MANUAL);
+            Robot.Elevator.driveElevatorByDirection(ElevatorConstants.ElevatorDirection.UP);
         } else if (Robot.m_oi.getController().getLeftTrigger() != 0) {
-            Robot.Elevator.setDriveMode(Robot.Elevator.DriveModes.MANUAL);
-            Robot.Elevator.driveElevatorByDirection(Robot.Elevator.ElevatorDirection.DOWN);
+            Robot.Elevator.setDriveMode(ElevatorConstants.DriveModes.MANUAL);
+            Robot.Elevator.driveElevatorByDirection(ElevatorConstants.ElevatorDirection.DOWN);
         } else { // Auto PID Elevator drive
             if (Robot.m_oi.getController().getRightBumperPressed()) {
 
             } else if (Robot.m_oi.getController().getLeftBumperPressed()) {
 
-            } else if (Robot.Elevator.getDriveMode() == Robot.Elevator.DriveModes.MANUAL) {
+            } else if (Robot.Elevator.getDriveMode() == ElevatorConstants.DriveModes.MANUAL) {
                 Robot.Elevator.stop();
             }
         }
