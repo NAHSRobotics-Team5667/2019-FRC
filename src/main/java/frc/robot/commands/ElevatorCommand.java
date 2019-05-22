@@ -9,8 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.subsystems.ElevatorConstants;
-import frc.robot.subsystems.ElevatorConstants.DriveModes;
+import frc.robot.subsystems.elevator.ElevatorConstants;
 import frc.robot.utils.PIDFController;
 
 public class ElevatorCommand extends Command {
@@ -35,16 +34,28 @@ public class ElevatorCommand extends Command {
         if (Robot.m_oi.getController().getRightTrigger() != 0) {
             Robot.Elevator.setDriveMode(ElevatorConstants.DriveModes.MANUAL);
             Robot.Elevator.driveElevatorByDirection(ElevatorConstants.ElevatorDirection.UP);
+
         } else if (Robot.m_oi.getController().getLeftTrigger() != 0) {
             Robot.Elevator.setDriveMode(ElevatorConstants.DriveModes.MANUAL);
             Robot.Elevator.driveElevatorByDirection(ElevatorConstants.ElevatorDirection.DOWN);
+
         } else { // Auto PID Elevator drive
+
             if (Robot.m_oi.getController().getRightBumperPressed()) {
+                Robot.Elevator.setDriveMode(ElevatorConstants.DriveModes.AUTO);
+                Robot.Elevator.increaseLevel();
+                pidfController.setSetPoint(Robot.Elevator.getHeightFromLevel(Robot.Elevator.getCurrentLevel()));
 
             } else if (Robot.m_oi.getController().getLeftBumperPressed()) {
+                Robot.Elevator.setDriveMode(ElevatorConstants.DriveModes.AUTO);
+                Robot.Elevator.decreaseLevel();
+                pidfController.setSetPoint(Robot.Elevator.getHeightFromLevel(Robot.Elevator.getCurrentLevel()));
 
             } else if (Robot.Elevator.getDriveMode() == ElevatorConstants.DriveModes.MANUAL) {
                 Robot.Elevator.stop();
+
+            } else {
+                Robot.Elevator.driveElevatorBySpeed(pidfController.calculate(Robot.Elevator.getCurrentHeight()));
             }
         }
 

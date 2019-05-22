@@ -7,12 +7,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.drivetrain.MecanumDriveSubsystem;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,6 +28,7 @@ public class Robot extends TimedRobot {
     public static OI m_oi;
 
     public static ElevatorSubsystem Elevator;
+    public static MecanumDriveSubsystem DriveTrain;
 
     Command m_autonomousCommand;
     SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -37,7 +41,12 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         m_oi = new OI(RobotMap.controllerPort);
 
-        Elevator = new ElevatorSubsystem(RobotMap.ElevatorPWM, false);
+        Elevator = new ElevatorSubsystem(RobotMap.ElevatorPWM, false,
+                new Encoder(RobotMap.ElevatorEncoderA, RobotMap.ElevatorEncoderB));
+
+        DriveTrain = new MecanumDriveSubsystem(new PWMTalonSRX(RobotMap.frontLeftMotor),
+                new PWMTalonSRX(RobotMap.rearLeftMotor), new PWMTalonSRX(RobotMap.frontRightMotor),
+                new PWMTalonSRX(RobotMap.rearRightMotor));
 
         m_chooser.setDefaultOption("Default Auto", null);
         // chooser.addOption("My Auto", new MyAutoCommand());

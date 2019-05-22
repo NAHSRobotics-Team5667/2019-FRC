@@ -14,9 +14,19 @@ package frc.robot;
  * floating around.
  */
 public class RobotMap {
-    // Map ports for our robot
+    // ------------------- PWM Ports ---------------------------
+    // Drive train
+    public static int frontLeftMotor = 0;
+    public static int rearLeftMotor = 1;
+    public static int frontRightMotor = 2;
+    public static int rearRightMotor = 3;
+    // Elevator
+    public static int ElevatorPWM = 4;
 
-    public static int ElevatorPWM = 1;
+    // ------------------- DIO Ports ---------------------------
+    // Elevator
+    public static int ElevatorEncoderA = 0;
+    public static int ElevatorEncoderB = 1;
 
     // Controller
     public static int controllerPort = 0; // Controller port

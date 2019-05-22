@@ -5,22 +5,22 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.commands.ElevatorCommand;
-import frc.robot.subsystems.ElevatorConstants.DriveModes;
-import frc.robot.subsystems.ElevatorConstants.ElevatorDirection;
-import frc.robot.subsystems.ElevatorConstants.Levels;
+import frc.robot.subsystems.elevator.ElevatorConstants.DriveModes;
+import frc.robot.subsystems.elevator.ElevatorConstants.ElevatorDirection;
+import frc.robot.subsystems.elevator.ElevatorConstants.Levels;
 
 /**
  * A Linear elevator elevator subsystem
  */
 public class ElevatorSubsystem extends Subsystem {
 	// Constants
-	private final double k_PULLEY_CIRCUMFERENCE = .102;
+	private final double k_PULLEY_CIRCUMFERENCE = .102; // In meters
 	private final double k_GEAR_RATIO = 64;
 	private final double k_PULESES_PER_REVOLUTION = 1024;
 	// Rocket levels based on height in relation to encoder ticks
@@ -66,6 +66,20 @@ public class ElevatorSubsystem extends Subsystem {
 
 		this.d_levels = d_levels;
 
+		this.encoder = encoder;
+
+	}
+
+	/**
+	 * A linear elevator elevator subsystem
+	 * 
+	 * @param id         - The linear elevator motor PWM port on the roborio
+	 * @param isInverted - Is the motor inverted
+	 * @param encoder    - The elevator encoder
+	 */
+	public ElevatorSubsystem(int id, boolean isInverted, Encoder encoder) {
+		this.m_motor = new PWMTalonSRX(id);
+		this.m_motor.setInverted(isInverted);
 		this.encoder = encoder;
 
 	}
@@ -121,7 +135,7 @@ public class ElevatorSubsystem extends Subsystem {
 		}
 	}
 
-	public double getHeight(Levels level) {
+	public double getCurrentHeight() {
 		// currentEncoderPulses / (pulesesPerRevolution * gear ratio) *
 		// circumferenceOfPulley
 		return (this.encoder.get() / (k_PULESES_PER_REVOLUTION * k_GEAR_RATIO)) * k_PULLEY_CIRCUMFERENCE;
@@ -204,6 +218,10 @@ public class ElevatorSubsystem extends Subsystem {
 	 */
 	public DriveModes getDriveMode() {
 		return this.driveMode;
+	}
+
+	public Levels getCurrentLevel() {
+		return m_level;
 	}
 
 }

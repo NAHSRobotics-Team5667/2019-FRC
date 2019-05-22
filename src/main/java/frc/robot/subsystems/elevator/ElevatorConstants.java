@@ -5,10 +5,10 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.elevator;
 
 /**
- * Add your docs here.
+ * Elevator Constants
  */
 public enum ElevatorConstants {
     ;
