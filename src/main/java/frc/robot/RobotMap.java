@@ -28,6 +28,17 @@ public class RobotMap {
     public static int ElevatorEncoderA = 0;
     public static int ElevatorEncoderB = 1;
 
+    // ------------------- PCM Ports ---------------------------
+    // Hatch Piston
+    public static int HatchSolenoid = 0;
+    // Cargo Piston
+    public static int CargoSolenoid = 1;
+
+    // ------------------- Auto Times --------------------------
+    // Hatch Piston Time
+    public static int HatchOutakeTime = 3; // 3 seconds
+    public static int CargoOutakeTime = 3; // 3 secods
+
     // Controller
     public static int controllerPort = 0; // Controller port
 

@@ -7,6 +7,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.buttons.Button;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import frc.robot.commands.CargoCommand;
+import frc.robot.commands.HatchCommand;
 import frc.robot.utils.Controller;
 
 /**
@@ -46,6 +50,12 @@ public class OI {
 
 	public OI(int controller_port) {
 		controller = new Controller(controller_port);
+
+		Button aButton = new JoystickButton(controller, RobotMap.button_A_Port);
+		Button bButton = new JoystickButton(controller, RobotMap.button_B_Port);
+
+		aButton.whenPressed(new HatchCommand(RobotMap.HatchOutakeTime));
+		bButton.whenPressed(new CargoCommand(RobotMap.CargoOutakeTime));
 	}
 
 	public Controller getController() {
