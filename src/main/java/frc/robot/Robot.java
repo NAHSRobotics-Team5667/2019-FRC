@@ -32,9 +32,8 @@ public class Robot extends TimedRobot {
 
     public static ElevatorSubsystem Elevator;
     public static MecanumDriveSubsystem DriveTrain;
-    public static HatchSubsystem HatchIntake;
-    public static CargoSubystem CargoIntake;
-
+    public static HatchSubsystem HatchIntake = new HatchSubsystem(new Solenoid(RobotMap.HatchSolenoid));
+    public static CargoSubystem CargoIntake = new CargoSubystem(new Solenoid(RobotMap.CargoSolenoid));
     Command m_autonomousCommand;
     SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -52,9 +51,6 @@ public class Robot extends TimedRobot {
         DriveTrain = new MecanumDriveSubsystem(new PWMTalonSRX(RobotMap.frontLeftMotor),
                 new PWMTalonSRX(RobotMap.rearLeftMotor), new PWMTalonSRX(RobotMap.frontRightMotor),
                 new PWMTalonSRX(RobotMap.rearRightMotor));
-
-        HatchIntake = new HatchSubsystem(new Solenoid(RobotMap.HatchSolenoid));
-        CargoIntake = new CargoSubystem(new Solenoid(RobotMap.CargoSolenoid));
 
         m_chooser.setDefaultOption("Default Auto", null);
         // chooser.addOption("My Auto", new MyAutoCommand());

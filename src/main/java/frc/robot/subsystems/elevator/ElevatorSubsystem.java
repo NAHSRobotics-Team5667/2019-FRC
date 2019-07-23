@@ -24,7 +24,7 @@ public class ElevatorSubsystem extends Subsystem {
 	private final double k_GEAR_RATIO = 64;
 	private final double k_PULSES_PER_REVOLUTION = 1024;
 	// Rocket levels based on height in relation to encoder ticks
-	private double[] d_levels = { 0, .95, 1.45 };
+	private double[] d_levels = { .1, .95, 1.45 };
 
 	// The rocket levels
 
