@@ -29,7 +29,7 @@ public class MecanumDriveCommand extends Command {
 	@Override
 	protected void execute() {
 		Map<String, Double> sticks = Robot.m_oi.getController().getSticks();
-		Robot.DriveTrain.driveCartesian(sticks.get("LSY"), sticks.get("LSX"), sticks.get("RSX"));
+		Robot.DriveTrain.driveCartesian(sticks.get("LSX"), sticks.get("LSY"), sticks.get("RSX"));
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
