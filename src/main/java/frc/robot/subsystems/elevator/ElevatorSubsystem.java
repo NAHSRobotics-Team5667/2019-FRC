@@ -22,7 +22,7 @@ public class ElevatorSubsystem extends Subsystem {
 	// Constants
 	private final double k_PULLEY_CIRCUMFERENCE = .102; // In meters
 	private final double k_GEAR_RATIO = 64;
-	private final double k_PULESES_PER_REVOLUTION = 1024;
+	private final double k_PULSES_PER_REVOLUTION = 1024;
 	// Rocket levels based on height in relation to encoder ticks
 	private double[] d_levels = { 0, .95, 1.45 };
 
@@ -136,9 +136,9 @@ public class ElevatorSubsystem extends Subsystem {
 	}
 
 	public double getCurrentHeight() {
-		// currentEncoderPulses / (pulesesPerRevolution * gear ratio) *
+		// currentEncoderPulses / (pulsesPerRevolution * gear ratio) *
 		// circumferenceOfPulley
-		return (this.encoder.get() / (k_PULESES_PER_REVOLUTION * k_GEAR_RATIO)) * k_PULLEY_CIRCUMFERENCE;
+		return (this.encoder.get() / (k_PULSES_PER_REVOLUTION * k_GEAR_RATIO)) * k_PULLEY_CIRCUMFERENCE;
 
 	}
 

@@ -13,7 +13,7 @@ package frc.robot.utils;
 public class PIDFController {
 
     private String name;
-    private double kP, kI, kD, kF, setpoint;
+    private double kP, kI, kD, kF, m_setpoint, m_lastError, m_totalError;
 
     /**
      * The PID Controller constructor
@@ -116,7 +116,7 @@ public class PIDFController {
      * @param setpoint - The setpoint
      */
     public void setSetPoint(double setpoint) {
-        this.setpoint = setpoint;
+        this.m_setpoint = setpoint;
     }
 
     /**
@@ -126,8 +126,11 @@ public class PIDFController {
      * @return The output
      */
     public double calculate(double input) {
-        double error = this.setpoint - input;
-        return kF + ((error * kP) + (error * kI) + (error * kD));
+        double error = this.m_setpoint - input;
+        double d_error = error - m_lastError;
+        m_totalError += error;
+
+        return kF + ((error * kP) + (m_totalError * kI) - (d_error * kD));
     }
 
 }
