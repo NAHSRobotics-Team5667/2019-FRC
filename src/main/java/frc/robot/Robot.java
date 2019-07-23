@@ -45,16 +45,13 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         m_oi = new OI(RobotMap.controllerPort);
 
-        Elevator = new ElevatorSubsystem(RobotMap.ElevatorPWM, false,
+        Elevator = new ElevatorSubsystem(new PWMTalonSRX(RobotMap.ElevatorPWM), false,
                 new Encoder(RobotMap.ElevatorEncoderA, RobotMap.ElevatorEncoderB));
 
         DriveTrain = new MecanumDriveSubsystem(new PWMTalonSRX(RobotMap.frontLeftMotor),
                 new PWMTalonSRX(RobotMap.rearLeftMotor), new PWMTalonSRX(RobotMap.frontRightMotor),
                 new PWMTalonSRX(RobotMap.rearRightMotor));
 
-        m_chooser.setDefaultOption("Default Auto", null);
-        // chooser.addOption("My Auto", new MyAutoCommand());
-        SmartDashboard.putData("Auto mode", m_chooser);
     }
 
     /**

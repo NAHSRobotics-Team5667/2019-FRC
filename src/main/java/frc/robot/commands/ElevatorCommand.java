@@ -58,7 +58,11 @@ public class ElevatorCommand extends Command {
                 Robot.Elevator.driveElevatorBySpeed(pidfController.calculate(Robot.Elevator.getCurrentHeight()));
             }
         }
+        Robot.Elevator.outputTelemetry();
 
+        if (Robot.m_oi.getController().getXButtonPressed()) {
+            Robot.Elevator.resetEncoder();
+        }
     }
 
     // Make this return true when this Command no longer needs to run execute()
