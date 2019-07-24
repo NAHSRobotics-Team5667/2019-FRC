@@ -1,7 +1,5 @@
 # The Digital Eagles Team 5667 2019 Code
 
-## robot
-
 ### [Robot](src/main/java/frc/robot/Robot.java)
 
 ### [RobotMap](src/main/java/frc/robot/RobotMap.java)
