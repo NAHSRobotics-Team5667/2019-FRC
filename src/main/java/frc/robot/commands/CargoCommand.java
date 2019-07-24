@@ -39,6 +39,7 @@ public class CargoCommand extends TimedCommand {
 	@Override
 	protected void end() {
 		Robot.CargoIntake.disablePiston();
+
 	}
 
 	// Called when another command which requires one or more of the same

@@ -9,6 +9,7 @@ package frc.robot.subsystems.intakes;
 
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The Robot Hatch Intake
@@ -52,15 +53,40 @@ public class HatchSubsystem extends Subsystem {
 		this(piston, true);
 	}
 
+	/**
+	 * Enables the solenoid
+	 */
 	public void enablePiston() {
 		piston.set(kOn);
 	}
 
+	/**
+	 * Disables the solenoid
+	 */
 	public void disablePiston() {
 		piston.set(kOff);
 	}
 
+	/**
+	 * Toggles the solenoid
+	 */
 	public void togglePiston() {
 		piston.set(!piston.get());
+	}
+
+	/**
+	 * Get the status of the solenoid
+	 * 
+	 * @return The solenoid status
+	 */
+	public boolean getStatus() {
+		return this.piston.get();
+	}
+
+	/**
+	 * Output diagnostics
+	 */
+	public void outputTelemetry() {
+		SmartDashboard.putBoolean("Hatch:", getStatus());
 	}
 }

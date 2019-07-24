@@ -11,7 +11,7 @@ package frc.robot.subsystems.elevator;
  * Elevator Constants
  */
 public enum ElevatorConstants {
-    ;
+    ; // Java bug :/
     public enum Levels {
         ONE, TWO, THREE;
     }
@@ -21,6 +21,7 @@ public enum ElevatorConstants {
         UP, DOWN;
     }
 
+    // Robot drive modes available
     public enum DriveModes {
         MANUAL, AUTO;
     }

@@ -66,4 +66,14 @@ public class RobotMap {
     public static int button_menu_Port = 8; // Menu Button
     public static int button_Start_Port = 7; // Start button
 
+    // ---------------- Camera Defaults -----------------------
+    public static int c_WIDTH = 120;
+    public static int c_HEIGHT = 60;
+    public static int c_FPS = 18;
+
+    // ---------------- Elevator Defaults -----------------------
+    public static double e_SPEEDUP = 1; // The motor speed when the elevator is traveling up
+    public static double e_SPEEDDOWN = -.7; // The motor speed when elevator is traveling down
+    public static double[] e_LEVELS = { .1, .95, 1.45 }; // Rocket heights in meters
+
 }

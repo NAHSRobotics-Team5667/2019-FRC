@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWMTalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.RobotMap;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.subsystems.elevator.ElevatorConstants.DriveModes;
 import frc.robot.subsystems.elevator.ElevatorConstants.ElevatorDirection;
@@ -24,8 +25,8 @@ public class ElevatorSubsystem extends Subsystem {
 	private final double k_PULLEY_CIRCUMFERENCE = .102; // In meters
 	private final double k_GEAR_RATIO = 64;
 	private final double k_PULSES_PER_REVOLUTION = 1024;
-	// Rocket levels based on height in relation to encoder ticks
-	private double[] d_levels = { .1, .95, 1.45 };
+	// Rocket levels based on height in relation to encoder ticks and meters
+	private double[] d_levels;
 
 	// The rocket levels
 
@@ -33,8 +34,8 @@ public class ElevatorSubsystem extends Subsystem {
 
 	private PWMTalonSRX m_motor; // The elevator motor
 
-	private double m_speedUp = 1; // The motor speed when the elevator is traveling up
-	private double m_speedDown = -.7; // The motor speed when elevator is traveling down
+	private double m_speedUp; // The motor speed when the elevator is traveling up
+	private double m_speedDown; // The motor speed when elevator is traveling down
 
 	private Levels m_level = Levels.ONE;
 
@@ -81,11 +82,7 @@ public class ElevatorSubsystem extends Subsystem {
 	 * @param encoder    - The elevator encoder
 	 */
 	public ElevatorSubsystem(PWMTalonSRX motor, boolean isInverted, Encoder encoder) {
-		this.m_motor = motor;
-		this.m_motor.setInverted(isInverted);
-		this.encoder = encoder;
-		resetEncoder();
-		this.encoder.setReverseDirection(true);
+		this(motor, isInverted, RobotMap.e_SPEEDUP, RobotMap.e_SPEEDDOWN, RobotMap.e_LEVELS, encoder);
 
 	}
 
@@ -97,8 +94,7 @@ public class ElevatorSubsystem extends Subsystem {
 	 * 
 	 **/
 	public ElevatorSubsystem(PWMTalonSRX motor, boolean isInverted) {
-		this.m_motor = motor;
-		this.m_motor.setInverted(isInverted);
+		this(motor, isInverted, RobotMap.e_SPEEDUP, RobotMap.e_SPEEDDOWN, RobotMap.e_LEVELS, null);
 
 	}
 
@@ -108,7 +104,8 @@ public class ElevatorSubsystem extends Subsystem {
 	 * @param id - The linear elevator motor PWM port on the roborio
 	 */
 	public ElevatorSubsystem(PWMTalonSRX motor) {
-		this.m_motor = motor;
+		this(motor, false, RobotMap.e_SPEEDUP, RobotMap.e_SPEEDDOWN, RobotMap.e_LEVELS, null);
+
 	}
 
 	/**
@@ -197,10 +194,16 @@ public class ElevatorSubsystem extends Subsystem {
 		m_level = level;
 	}
 
+	/**
+	 * Increase the elevator level counter
+	 */
 	public void increaseLevel() {
 		setCurrentLevel((m_level == Levels.ONE) ? Levels.TWO : Levels.THREE);
 	}
 
+	/**
+	 * Decrease the elevator level counter
+	 */
 	public void decreaseLevel() {
 		Levels level = (m_level == Levels.THREE) ? Levels.TWO : Levels.ONE;
 		if (m_level != level) {
@@ -226,10 +229,20 @@ public class ElevatorSubsystem extends Subsystem {
 		return this.driveMode;
 	}
 
+	/**
+	 * Get the elevator's current level
+	 * 
+	 * @return The Elevator's current level
+	 */
 	public Levels getCurrentLevel() {
 		return m_level;
 	}
 
+	/**
+	 * Get the elevator's currenet level in an integer format
+	 * 
+	 * @return The Elevator's current level as an integer
+	 */
 	public int getCurrentLevelNum() {
 		switch (m_level) {
 		case ONE:
@@ -243,14 +256,19 @@ public class ElevatorSubsystem extends Subsystem {
 		}
 	}
 
+	/**
+	 * reset the encoder
+	 */
 	public void resetEncoder() {
 		this.encoder.reset();
 	}
 
+	/**
+	 * Output diagnositcs
+	 */
 	public void outputTelemetry() {
 		SmartDashboard.putNumber("Elevator Height:", getCurrentHeight());
 		SmartDashboard.putNumber("Elevator Level:", getCurrentLevelNum());
-		SmartDashboard.putNumber("Elevator Raw:", encoder.get());
 	}
 
 }
