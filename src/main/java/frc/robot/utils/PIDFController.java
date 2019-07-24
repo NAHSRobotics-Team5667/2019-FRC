@@ -7,6 +7,8 @@
 
 package frc.robot.utils;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  * A custom Closed-Loop Feedback PIDF Controller
  */
@@ -131,6 +133,17 @@ public class PIDFController {
         m_totalError += error;
 
         return kF + ((error * kP) + (m_totalError * kI) - (d_error * kD));
+    }
+
+    /**
+     * Output diagnostics
+     */
+    public void outputTelemetry() {
+        SmartDashboard.putNumber(name + "_P", kP);
+        SmartDashboard.putNumber(name + "_I", kI);
+        SmartDashboard.putNumber(name + "_D", kD);
+        SmartDashboard.putNumber(name + "_F", kF);
+
     }
 
 }
