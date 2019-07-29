@@ -28,18 +28,20 @@ public class CargoCommand extends TimedCommand {
 	@Override
 	protected void initialize() {
 		Robot.CargoIntake.enablePiston();
+		Robot.CargoIntake.outputTelemetry();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
+		Robot.CargoIntake.outputTelemetry();
 	}
 
 	// Called once after timeout
 	@Override
 	protected void end() {
 		Robot.CargoIntake.disablePiston();
-
+		Robot.CargoIntake.outputTelemetry();
 	}
 
 	// Called when another command which requires one or more of the same

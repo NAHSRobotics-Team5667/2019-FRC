@@ -37,7 +37,8 @@ public class RobotMap {
     // ------------------- Auto Times --------------------------
     // Hatch Piston Time
     public static int HatchOutakeTime = 3; // 3 seconds
-    public static int CargoOutakeTime = 3; // 3 secods
+    // Cargo Piston Time
+    public static int CargoOutakeTime = 3; // 3 seconds
 
     // Controller
     public static int controllerPort = 0; // Controller port

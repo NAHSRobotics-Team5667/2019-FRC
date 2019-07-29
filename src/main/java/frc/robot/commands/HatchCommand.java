@@ -30,17 +30,20 @@ public class HatchCommand extends TimedCommand {
 	@Override
 	protected void initialize() {
 		Robot.HatchIntake.enablePiston();
+		Robot.HatchIntake.outputTelemetry();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
+		Robot.HatchIntake.outputTelemetry();
 	}
 
 	// Called once after timeout
 	@Override
 	protected void end() {
 		Robot.HatchIntake.disablePiston();
+		Robot.HatchIntake.outputTelemetry();
 	}
 
 	// Called when another command which requires one or more of the same

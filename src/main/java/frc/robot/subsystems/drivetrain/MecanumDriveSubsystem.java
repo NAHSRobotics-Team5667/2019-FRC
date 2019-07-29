@@ -43,8 +43,8 @@ public class MecanumDriveSubsystem extends Subsystem {
 	/**
 	 * Drive the robot using cartesian coordinates from a joystick
 	 * 
-	 * @param xSpeed    - The x axis (Left/Right motion)
-	 * @param ySpeed    - The y axis (Forward/Backward motion)
+	 * @param xSpeed    - The x axis (Left/Right joystick)
+	 * @param ySpeed    - The y axis (Forward/Backward joystick)
 	 * @param zRotation - The z axis (Rotation)
 	 */
 	public void driveCartesian(double xSpeed, double ySpeed, double zRotation) {

@@ -125,10 +125,20 @@ public class Controller extends XboxController {
         return Hand.kLeft;
     }
 
+    /**
+     * Whether the bumper was pressed since the last check.
+     * 
+     * @return Boolean (true) pressed / (false) not pressed
+     */
     public boolean getRightBumperPressed() {
         return super.getBumperPressed(getRightHand());
     }
 
+    /**
+     * Whether the bumper was pressed since the last check.
+     * 
+     * @return Boolean (true) pressed / (false) not pressed
+     */
     public boolean getLeftBumperPressed() {
         return super.getBumperPressed(getLeftHand());
     }

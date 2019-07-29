@@ -60,6 +60,8 @@ public class ElevatorCommand extends Command {
         }
 
         if (Robot.m_oi.getController().getXButtonPressed()) {
+            Robot.Elevator.setDriveMode(ElevatorConstants.DriveModes.MANUAL);
+            Robot.Elevator.stop();
             Robot.Elevator.resetEncoder();
         }
 
