@@ -60,6 +60,7 @@ public class ElevatorSubsystem extends Subsystem {
 	 */
 	public ElevatorSubsystem(PWMTalonSRX motor, boolean isInverted, double speedUp, double speedDown, double[] d_levels,
 			Encoder encoder) {
+
 		this.m_motor = motor;
 		this.m_motor.setInverted(isInverted);
 
@@ -69,8 +70,11 @@ public class ElevatorSubsystem extends Subsystem {
 		this.d_levels = d_levels;
 
 		this.encoder = encoder;
-		resetEncoder();
-		this.encoder.setReverseDirection(true);
+
+		if (this.encoder != null) {
+			resetEncoder();
+			this.encoder.setReverseDirection(true);
+		}
 
 	}
 
@@ -155,7 +159,7 @@ public class ElevatorSubsystem extends Subsystem {
 	}
 
 	/**
-	 * Dirve the elevator using direction
+	 * Drive the elevator using direction
 	 * 
 	 * @param dir - The direction the elevator will be going in
 	 */
@@ -239,7 +243,7 @@ public class ElevatorSubsystem extends Subsystem {
 	}
 
 	/**
-	 * Get the elevator's currenet level in an integer format
+	 * Get the elevator's current level in an integer format
 	 * 
 	 * @return The Elevator's current level as an integer
 	 */
@@ -264,7 +268,7 @@ public class ElevatorSubsystem extends Subsystem {
 	}
 
 	/**
-	 * Output diagnositcs
+	 * Output diagnostics
 	 */
 	public void outputTelemetry() {
 		SmartDashboard.putNumber("Elevator Height:", getCurrentHeight());

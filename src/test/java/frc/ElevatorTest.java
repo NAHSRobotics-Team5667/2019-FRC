@@ -7,8 +7,54 @@
 
 package tests;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+import edu.wpi.first.wpilibj.PWMTalonSRX;
+import frc.robot.subsystems.elevator.ElevatorSubsystem;
+
 /**
- * Add your docs here.
+ * Elevator JUnite tests
  */
 public class ElevatorTest {
+
+    @Test
+    public void ElevatorLevelIncreaseTest() {
+        ElevatorSubsystem elevator = new ElevatorSubsystem(new PWMTalonSRX(0));
+
+        elevator.increaseLevel();
+        assertEquals(elevator.getCurrentLevelNum() == 2, true);
+
+        elevator.increaseLevel();
+        assertEquals(elevator.getCurrentLevelNum() == 3, true);
+
+        elevator.increaseLevel();
+        assertEquals(elevator.getCurrentLevelNum() == 3, true);
+
+        elevator.close();
+    }
+
+    @Test
+    public void ElevatorLevelDecreaseTest() {
+        ElevatorSubsystem elevator = new ElevatorSubsystem(new PWMTalonSRX(1));
+
+        elevator.increaseLevel();
+        elevator.increaseLevel();
+        elevator.increaseLevel();
+
+        assertEquals(elevator.getCurrentLevelNum() == 3, true);
+
+        elevator.decreaseLevel();
+        assertEquals(elevator.getCurrentLevelNum() == 2, true);
+
+        elevator.decreaseLevel();
+        assertEquals(elevator.getCurrentLevelNum() == 1, true);
+
+        elevator.decreaseLevel();
+        assertEquals(elevator.getCurrentLevelNum() == 1, true);
+
+        elevator.close();
+    }
+
 }

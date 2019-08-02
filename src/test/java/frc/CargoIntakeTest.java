@@ -7,8 +7,43 @@
 
 package tests;
 
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+import edu.wpi.first.wpilibj.Solenoid;
+import frc.robot.subsystems.intakes.CargoSubystem;
+
 /**
- * Add your docs here.
+ * Cargo Intake JUnit tests
  */
 public class CargoIntakeTest {
+
+    @Test
+    public void CargoIntakeTestTrue() {
+        CargoSubystem cargoIntake = new CargoSubystem(new Solenoid(2), true);
+
+        cargoIntake.enablePiston();
+        assertEquals(cargoIntake.getStatus(), true);
+
+        cargoIntake.disablePiston();
+        assertEquals(cargoIntake.getStatus(), false);
+
+        cargoIntake.close();
+
+    }
+
+    @Test
+    public void CargoIntakeTestFalse() {
+        CargoSubystem cargoIntake = new CargoSubystem(new Solenoid(3), false);
+
+        cargoIntake.enablePiston();
+        assertEquals(cargoIntake.getStatus(), false);
+
+        cargoIntake.disablePiston();
+        assertEquals(cargoIntake.getStatus(), true);
+
+        cargoIntake.close();
+
+    }
 }

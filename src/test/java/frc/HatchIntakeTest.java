@@ -29,6 +29,8 @@ public class HatchIntakeTest {
 
         hatchSubsystem.disablePiston();
         assertEquals(hatchSubsystem.getStatus(), false);
+
+        hatchSubsystem.close();
     }
 
     @Test
@@ -41,6 +43,8 @@ public class HatchIntakeTest {
 
         hatchSubsystem.disablePiston();
         assertEquals(hatchSubsystem.getStatus(), true);
+
+        hatchSubsystem.close();
 
     }
 
