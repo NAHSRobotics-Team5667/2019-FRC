@@ -14,13 +14,27 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class PIDFController {
 
+    private final double k_deltaTime = 0.02; // Default time in between calls
+
     private String name;
-    private double kP, kI, kD, kF, m_setpoint, m_lastError, m_totalError;
+    private double kP, kI, kD, kF;
+
+    private double m_setpoint;
+    private double m_lastError;
+    private double m_totalError;
+    private double m_error;
+    private double m_tolerance;
+
+    private double m_MinOutput;
+    private double m_MaxOutput;
+
+    private double m_MinInput;
+    private double m_MaxInput;
 
     /**
      * The PID Controller constructor
      * 
-     * @param name - The Subsytem name
+     * @param name - The Subsystem name
      * @param kP   - the Proportional gain
      * @param kI   - the Integral gain
      * @param kD   - the Derivative gain
@@ -77,7 +91,7 @@ public class PIDFController {
     }
 
     /**
-     * Set the proportinal gain
+     * Set the proportional gain
      * 
      * @param kP - the proportional gain
      */
@@ -122,17 +136,117 @@ public class PIDFController {
     }
 
     /**
+     * Clamp the value between a minimum and maximum value
+     * 
+     * @param n   - The number being measured
+     * @param min - The minimum result
+     * @param max - The maximum result
+     * 
+     * @return - The clamped value
+     */
+    private static double clamp(double n, double min, double max) {
+        return Math.max(min, Math.min(n, max));
+    }
+
+    /**
+     * Map a value from one range to another
+     * 
+     * @param n     - The value
+     * @param i_min - The min of range 1
+     * @param i_max - The max of range 1
+     * @param o_min - The min of range 2 (output range)
+     * @param o_max - The max of range 2 (output range)
+     * @return translated value from range 1 to range 2
+     */
+    public static double map(double n, double i_min, double i_max, double o_min, double o_max) {
+        return o_min + (o_max - o_min) * ((n - i_min) / (i_max - i_min));
+    }
+
+    /**
+     * Map a value from input range to output range
+     * 
+     * @param n - The value
+     * @return translated value from input range to output range
+     */
+    public double map(double n) {
+        return map(n, m_MinInput, m_MaxInput, m_MinOutput, m_MaxOutput);
+    }
+
+    /**
+     * How small the error must be considered "on target"
+     * 
+     * @param tolerance - The smallest acceptable error
+     */
+    public void setTolerance(double tolerance) {
+        this.m_tolerance = tolerance;
+    }
+
+    /**
+     * Get the PIDF Controller tolerance level
+     * 
+     * @return The PIDF Controller's Tolerance level
+     */
+    public double getTolerance() {
+        return m_tolerance;
+    }
+
+    /**
+     * Set the min and max values the PID Controller can set to
+     * 
+     * @param min - The smallest input value
+     * @param max - The highest input value
+     */
+    public void setInputRange(double min, double max) {
+        m_MinInput = min;
+        m_MaxInput = max;
+
+        // Update the setpoint to be in these values if changed mid run
+        setSetPoint(m_setpoint);
+    }
+
+    /**
+     * Set the min and max values the PID Controller can output
+     * 
+     * @param min - The minimum output
+     * @param max - The maximum output
+     */
+    public void setOutputRange(double min, double max) {
+        m_MinOutput = min;
+        m_MaxOutput = max;
+    }
+
+    // Returns the last error recorded when calculate was last called
+    // If called in the robot loop, should be every 0.02 seconds
+    public double getError() {
+        return m_error;
+    }
+
+    /**
      * Calculate the output
      * 
-     * @param input - The sensor input
+     * @param input - The feed back input
+     * 
      * @return The output
      */
     public double calculate(double input) {
-        double error = this.m_setpoint - input;
-        double d_error = error - m_lastError;
-        m_totalError += error;
+        m_error = this.m_setpoint - input;
+        double deltaError = m_error - m_lastError;
+        m_totalError += m_error;
 
-        return kF + ((error * kP) + (m_totalError * kI) - (d_error * kD));
+        double output = kF + ((m_error * kP) + (m_totalError * kI) - ((deltaError / k_deltaTime) * kD));
+        output = clamp(output, m_MinOutput, m_MaxOutput);
+        m_lastError = m_error;
+
+        return output;
+    }
+
+    /**
+     * Returns the if the controller is on target
+     * 
+     * @return is the controller on target
+     */
+    public boolean onTarget() {
+        return Math.abs(m_error) < m_tolerance;
     }
 
     /**
@@ -144,6 +258,16 @@ public class PIDFController {
         SmartDashboard.putNumber(name + "_D", kD);
         SmartDashboard.putNumber(name + "_F", kF);
 
+    }
+
+    /**
+     * Read the values inputted from the SmartDashboard
+     */
+    public void readTelemetry() {
+        setP(SmartDashboard.getNumber(name + "_P", kP));
+        setI(SmartDashboard.getNumber(name + "_I", kI));
+        setD(SmartDashboard.getNumber(name + "_D", kD));
+        setF(SmartDashboard.getNumber(name + "_F", kF));
     }
 
 }

@@ -20,6 +20,26 @@ public class MecanumDriveSubsystem extends Subsystem {
 	// here. Call these from Commands.
 
 	private MecanumDrive drive;
+	private DriveMode driveMode = DriveMode.DEFAULT;
+
+	public enum DriveMode {
+		DEFAULT(0), MANUAL(0), AUTO(1);
+
+		private int mode;
+
+		private DriveMode(int mode) {
+			this.mode = mode;
+		}
+
+		/**
+		 * Get the Drive Train's current drive mode
+		 * 
+		 * @return The current drive mode (0 - MANUAL, 1 - AUTO)
+		 */
+		public int getDriveMode() {
+			return mode;
+		}
+	}
 
 	@Override
 	public void initDefaultCommand() {
@@ -33,7 +53,7 @@ public class MecanumDriveSubsystem extends Subsystem {
 	 * @param frontLeftMotor  - The front Left motor
 	 * @param rearLeftMotor   - The back left motor
 	 * @param frontRightMotor - The front right motor
-	 * @param rearRightMotor  -The back right motor
+	 * @param rearRightMotor  - The back right motor
 	 */
 	public MecanumDriveSubsystem(PWMTalonSRX frontLeftMotor, PWMTalonSRX rearLeftMotor, PWMTalonSRX frontRightMotor,
 			PWMTalonSRX rearRightMotor) {
@@ -49,6 +69,33 @@ public class MecanumDriveSubsystem extends Subsystem {
 	 */
 	public void driveCartesian(double xSpeed, double ySpeed, double zRotation) {
 		this.drive.driveCartesian(xSpeed, ySpeed, zRotation);
+	}
+
+	/**
+	 * Get the current Drive Mode
+	 * 
+	 * @return The current drive mode (0 - MANUAL, 1 - AUTO)
+	 */
+	public int getDriveModeInt() {
+		return driveMode.getDriveMode();
+	}
+
+	/**
+	 * Get the current Drive Mode
+	 * 
+	 * @return The current drive mode (0 - MANUAL, 1 - AUTO)
+	 */
+	public DriveMode getDriveMode() {
+		return driveMode;
+	}
+
+	/**
+	 * Set the Drive mode
+	 * 
+	 * @param mode - The desired drive mode behavior
+	 */
+	public void setDriveMode(DriveMode mode) {
+		driveMode = mode;
 	}
 
 	/**
