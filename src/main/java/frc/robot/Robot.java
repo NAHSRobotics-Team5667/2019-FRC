@@ -17,6 +17,7 @@ import frc.robot.subsystems.elevator.ElevatorSubsystem;
 import frc.robot.subsystems.intakes.CargoSubystem;
 import frc.robot.subsystems.intakes.HatchSubsystem;
 import frc.robot.subsystems.vision.CameraSubsystem;
+import frc.robot.subsystems.vision.LimeLightSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -66,6 +67,7 @@ public class Robot extends TimedRobot {
         Elevator.outputTelemetry();
         HatchIntake.outputTelemetry();
         CargoIntake.outputTelemetry();
+        LimeLightSubsystem.getInstance().outputTelemetry();
     }
 
     /**

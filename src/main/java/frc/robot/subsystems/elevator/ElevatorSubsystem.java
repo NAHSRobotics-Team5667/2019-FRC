@@ -9,6 +9,7 @@ package frc.robot.subsystems.elevator;
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PWMTalonSRX;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotMap;
@@ -32,7 +33,7 @@ public class ElevatorSubsystem extends Subsystem {
 
 	private DriveModes driveMode = DriveModes.MANUAL;
 
-	private PWMTalonSRX m_motor; // The elevator motor
+	private SpeedController m_motor; // The elevator motor
 
 	private double m_speedUp; // The motor speed when the elevator is traveling up
 	private double m_speedDown; // The motor speed when elevator is traveling down
@@ -50,7 +51,7 @@ public class ElevatorSubsystem extends Subsystem {
 	/**
 	 * A linear elevator elevator subsystem
 	 * 
-	 * @param id         - The linear elevator motor PWM port on the roborio
+	 * @param motor      - The linear elevator motor
 	 * @param isInverted - Is the motor inverted
 	 * @param speedUp    - The motor speed when the elevator is traveling up
 	 * @param speedDown  - The motor speed when elevator is traveling down
@@ -58,8 +59,8 @@ public class ElevatorSubsystem extends Subsystem {
 	 *                   each level of the rocket.
 	 * @param encoder    - The elevator encoder
 	 */
-	public ElevatorSubsystem(PWMTalonSRX motor, boolean isInverted, double speedUp, double speedDown, double[] d_levels,
-			Encoder encoder) {
+	public ElevatorSubsystem(SpeedController motor, boolean isInverted, double speedUp, double speedDown,
+			double[] d_levels, Encoder encoder) {
 
 		this.m_motor = motor;
 		this.m_motor.setInverted(isInverted);
@@ -81,11 +82,11 @@ public class ElevatorSubsystem extends Subsystem {
 	/**
 	 * A linear elevator elevator subsystem
 	 * 
-	 * @param id         - The linear elevator motor PWM port on the roborio
+	 * @param motor      - The linear elevator motor
 	 * @param isInverted - Is the motor inverted
 	 * @param encoder    - The elevator encoder
 	 */
-	public ElevatorSubsystem(PWMTalonSRX motor, boolean isInverted, Encoder encoder) {
+	public ElevatorSubsystem(SpeedController motor, boolean isInverted, Encoder encoder) {
 		this(motor, isInverted, RobotMap.e_SPEEDUP, RobotMap.e_SPEEDDOWN, RobotMap.e_LEVELS, encoder);
 
 	}
@@ -93,11 +94,11 @@ public class ElevatorSubsystem extends Subsystem {
 	/**
 	 * A linear elevator elevator subsystem
 	 * 
-	 * @param id         - The linear elevator motor PWM port on the roborio
+	 * @param motor      - The linear elevator motor
 	 * @param isInverted - Is the motor inverted
 	 * 
 	 **/
-	public ElevatorSubsystem(PWMTalonSRX motor, boolean isInverted) {
+	public ElevatorSubsystem(SpeedController motor, boolean isInverted) {
 		this(motor, isInverted, RobotMap.e_SPEEDUP, RobotMap.e_SPEEDDOWN, RobotMap.e_LEVELS, null);
 
 	}
@@ -105,9 +106,9 @@ public class ElevatorSubsystem extends Subsystem {
 	/**
 	 * A Linear elevator elevator subsystem
 	 * 
-	 * @param id - The linear elevator motor PWM port on the roborio
+	 * @param motor - The linear elevator motor
 	 */
-	public ElevatorSubsystem(PWMTalonSRX motor) {
+	public ElevatorSubsystem(SpeedController motor) {
 		this(motor, false, RobotMap.e_SPEEDUP, RobotMap.e_SPEEDDOWN, RobotMap.e_LEVELS, null);
 
 	}
@@ -130,18 +131,14 @@ public class ElevatorSubsystem extends Subsystem {
 	 *         elevator
 	 */
 	public double getHeightFromLevel(Levels level) {
-		switch (level) {
-		case ONE:
-			return this.d_levels[0];
-		case TWO:
-			return this.d_levels[1];
-		case THREE:
-			return this.d_levels[2];
-		default:
-			return d_levels[0];
-		}
+		return d_levels[level.getLevel() - 1];
 	}
 
+	/**
+	 * Get the Elevator's height in meters using the Encoder count
+	 * 
+	 * @return the current height in meters
+	 */
 	public double getCurrentHeight() {
 		// currentEncoderPulses / (pulsesPerRevolution * gear ratio) *
 		// circumferenceOfPulley
@@ -175,7 +172,7 @@ public class ElevatorSubsystem extends Subsystem {
 	 */
 	public void driveElevatorByLevel(Levels level, double currentHeight) {
 		double targetHeight = this.getHeightFromLevel(level);
-		if (targetHeight > currentHeight) {
+		if (targetHeight < currentHeight) {
 			this.driveElevatorByDirection(ElevatorDirection.DOWN);
 		} else {
 			this.driveElevatorByDirection(ElevatorDirection.UP);
@@ -209,14 +206,11 @@ public class ElevatorSubsystem extends Subsystem {
 	 * Decrease the elevator level counter
 	 */
 	public void decreaseLevel() {
-		Levels level = (m_level == Levels.THREE) ? Levels.TWO : Levels.ONE;
-		if (m_level != level) {
-			setCurrentLevel(level);
-		}
+		setCurrentLevel((m_level == Levels.THREE) ? Levels.TWO : Levels.ONE);
 	}
 
 	/**
-	 * Set the current auto mode
+	 * Set the current elevator drive mode
 	 * 
 	 * @param mode - The Drive mode for the elevator (MANUAL or AUTO)
 	 */
@@ -230,7 +224,7 @@ public class ElevatorSubsystem extends Subsystem {
 	 * @return The elevator's current drive mode (MANUAL or AUTO)
 	 */
 	public DriveModes getDriveMode() {
-		return this.driveMode;
+		return driveMode;
 	}
 
 	/**
@@ -248,16 +242,7 @@ public class ElevatorSubsystem extends Subsystem {
 	 * @return The Elevator's current level as an integer
 	 */
 	public int getCurrentLevelNum() {
-		switch (m_level) {
-		case ONE:
-			return 1;
-		case TWO:
-			return 2;
-		case THREE:
-			return 3;
-		default:
-			return 0;
-		}
+		return m_level.getLevel();
 	}
 
 	/**

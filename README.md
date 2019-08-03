@@ -24,7 +24,7 @@
 ### [Commands](src/main/java/frc/robot/commands)
 
 * [Drive Train Command](src/main/java/frc/robot/commands/MecanumDriveCommand.java)
-  * Manual control and auto alignment using PID Control and the Lime Light
+  * Manual control and auto alignment using PID Control and the LimeLight
 * [Elevator Command](src/main/java/frc/robot/commands/ElevatorCommand.java)
   * Manual control and PID Control
 * [Cargo Command](src/main/java/frc/robot/commands/CargoCommand.java)
