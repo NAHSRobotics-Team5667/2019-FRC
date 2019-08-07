@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import frc.robot.subsystems.drivetrain.MecanumDriveSubsystem;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
-import frc.robot.subsystems.intakes.CargoSubystem;
+import frc.robot.subsystems.intakes.CargoSubsystem;
 import frc.robot.subsystems.intakes.HatchSubsystem;
 import frc.robot.subsystems.vision.CameraSubsystem;
 import frc.robot.subsystems.vision.LimeLightSubsystem;
@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
     public static ElevatorSubsystem Elevator;
     public static MecanumDriveSubsystem DriveTrain;
     public static HatchSubsystem HatchIntake = new HatchSubsystem(new Solenoid(RobotMap.HatchSolenoid));
-    public static CargoSubystem CargoIntake = new CargoSubystem(new Solenoid(RobotMap.CargoSolenoid));
+    public static CargoSubsystem CargoIntake = new CargoSubsystem(new Solenoid(RobotMap.CargoSolenoid));
     public static CameraSubsystem Cameras = new CameraSubsystem(2);
 
     /**
