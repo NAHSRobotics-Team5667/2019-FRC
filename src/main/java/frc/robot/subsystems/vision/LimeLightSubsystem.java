@@ -289,7 +289,7 @@ public class LimeLightSubsystem extends Subsystem {
 	}
 
 	/**
-	 * Sets the layout of the cameras viewed at 10.40.85.11:5800
+	 * Sets the layout of the cameras viewed at 10.56.57.11:5800
 	 * 
 	 * @param streamMode - STANDARD is side by side, MAIN is Limelight big with
 	 *                   secondary camera in bottom right, SECONDARY is vice versa
