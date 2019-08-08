@@ -33,9 +33,12 @@ public class MecanumDriveCommand extends Command {
 	protected void initialize() {
 		Robot.DriveTrain.stop();
 
-		xController = new PIDFController("X_DRIVE", 0, 0, 0, 0);
-		yController = new PIDFController("Y_DRIVE", 0, 0, 0, 0);
-		zController = new PIDFController("Z_DRIVE", 0, 0, 0, 0);
+		xController = new PIDFController("X_DRIVE", 0.1, 0.01, 0, 0);
+		yController = new PIDFController("Y_DRIVE", 0.1, 0.1, 0, 0);
+		zController = new PIDFController("Z_DRIVE", 0.1, 0.001, 0, 0);
+
+		yController.disable();
+		zController.disable();
 
 		xController.setOutputRange(-0.3, 0.3);
 		yController.setOutputRange(-0.3, 0.3);
@@ -45,9 +48,9 @@ public class MecanumDriveCommand extends Command {
 		yController.setInputRange(-20.5, 20.5); // Vertical offset
 		zController.setInputRange(-90, 0); // Skew or rotation
 
-		xController.setTolerance(0.3);
-		yController.setTolerance(0.3);
-		zController.setTolerance(2);
+		xController.setTolerance(0.1);
+		yController.setTolerance(0.1);
+		zController.setTolerance(1);
 
 		xController.setSetPoint(0);
 		yController.setSetPoint(0);
@@ -72,15 +75,18 @@ public class MecanumDriveCommand extends Command {
 
 		}
 
-		if (Robot.DriveTrain.getDriveMode() == DriveMode.AUTO) {
+		if (Robot.DriveTrain.getDriveMode() == DriveMode.AUTO && LimeLightSubsystem.getInstance().hasValidTarget()) {
+
 			double[] yCorners = LimeLightSubsystem.getInstance().getYCorners();
 
 			double leftCorner = yCorners[1];
 			double rightCorner = yCorners[0];
 
-			double x = -xController.calculate(LimeLightSubsystem.getInstance().getXAngle());
-			double y = -yController.calculate(LimeLightSubsystem.getInstance().getYAngle());
-			double z = zController.calculate(LimeLightSubsystem.getInstance().getSkew());
+			double x = !xController.onTarget() ? -xController.calculate(LimeLightSubsystem.getInstance().getXAngle())
+					: 0;
+			double y = !yController.onTarget() ? -yController.calculate(LimeLightSubsystem.getInstance().getYAngle())
+					: 0;
+			double z = !zController.onTarget() ? zController.calculate(LimeLightSubsystem.getInstance().getSkew()) : 0;
 
 			if (leftCorner < rightCorner) {
 				// Check which way we need to rotate (left or right)
@@ -94,6 +100,10 @@ public class MecanumDriveCommand extends Command {
 			Map<String, Double> sticks = Robot.m_oi.getController().getSticks();
 			Robot.DriveTrain.driveCartesian(sticks.get("LSX"), sticks.get("LSY"), sticks.get("RSX"));
 		}
+
+		xController.readTelemetry();
+		yController.readTelemetry();
+		zController.readTelemetry();
 
 	}
 

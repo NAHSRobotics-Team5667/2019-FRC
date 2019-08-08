@@ -14,17 +14,17 @@
   * Elevator subsystem with PIDF controller implemented
 * [Cargo Intake](src/main/java/frc/robot/subsystems/intakes/CargoSubsystem.java)
   * The dog cone intake subsystem
-* [Hatch Intake](src/main/java/frc/robot/subsystems/intakes/HatchSubsystem.java)
+* [Hatch Intake](src/main/java/frc/robot/subsystems/intakes/HatchSubystem.java)
   * The triangle intake subsystem
 * [Cameras](src/main/java/frc/robot/subsystems/vision/CameraSubsystem.java)
-  * The multicamera subsystem for driver vision
+  * The multi-camera subsystem for driver vision
 * [Lime Light Driver](src/main/java/frc/robot/subsystems/vision/LimeLightSubsystem.java)
   * Lime Light Driver written as a singleton
 
 ### [Commands](src/main/java/frc/robot/commands)
 
 * [Drive Train Command](src/main/java/frc/robot/commands/MecanumDriveCommand.java)
-  * Manual control and auto alignment using PID Control and the Lime Light
+  * Manual control and auto alignment using PID Control and the LimeLight
 * [Elevator Command](src/main/java/frc/robot/commands/ElevatorCommand.java)
   * Manual control and PID Control
 * [Cargo Command](src/main/java/frc/robot/commands/CargoCommand.java)

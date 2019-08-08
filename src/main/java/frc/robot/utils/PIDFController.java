@@ -31,6 +31,8 @@ public class PIDFController {
     private double m_MinInput;
     private double m_MaxInput;
 
+    private boolean m_isEnabled;
+
     /**
      * The PID Controller constructor
      * 
@@ -46,6 +48,7 @@ public class PIDFController {
         this.kI = kI;
         this.kD = kD;
         this.kF = kF;
+        this.m_isEnabled = true;
     }
 
     /**
@@ -233,6 +236,9 @@ public class PIDFController {
      * @return The output
      */
     public double calculate(double input) {
+        if (!m_isEnabled) // If the PID Controller is disabled then don't calculate and return 0
+            return 0;
+
         m_error = this.m_setpoint - input;
         double deltaError = m_error - m_lastError;
         m_totalError += m_error;
@@ -251,6 +257,20 @@ public class PIDFController {
      */
     public boolean onTarget() {
         return Math.abs(m_error) < m_tolerance;
+    }
+
+    /**
+     * Enables the PID Controller
+     */
+    public void enable() {
+        m_isEnabled = true;
+    }
+
+    /**
+     * Disables the PID Controller and all output is 0
+     */
+    public void disable() {
+        m_isEnabled = false;
     }
 
     /**

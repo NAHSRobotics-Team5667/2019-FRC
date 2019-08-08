@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * The Robot Cargo Intake
  */
-public class CargoSubystem extends Subsystem {
+public class CargoSubsystem extends Subsystem {
 	// Put methods for controlling this subsystem
 	// here. Call these from Commands.
 
@@ -35,7 +35,7 @@ public class CargoSubystem extends Subsystem {
 	 * @param setOn  - The value which should be used for enabling / firing the
 	 *               piston
 	 */
-	public CargoSubystem(Solenoid piston, boolean setOn) {
+	public CargoSubsystem(Solenoid piston, boolean setOn) {
 		this.piston = piston;
 		this.kOn = setOn;
 		this.kOff = !setOn;
@@ -49,7 +49,7 @@ public class CargoSubystem extends Subsystem {
 	 * 
 	 * @param piston - The solenoid which controls the cargo mech
 	 */
-	public CargoSubystem(Solenoid piston) {
+	public CargoSubsystem(Solenoid piston) {
 		this(piston, true);
 	}
 

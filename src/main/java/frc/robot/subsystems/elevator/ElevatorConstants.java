@@ -11,9 +11,29 @@ package frc.robot.subsystems.elevator;
  * Elevator Constants
  */
 public enum ElevatorConstants {
-    ; // Java bug :/
+    ; // Java bug? Need some value
     public enum Levels {
-        ONE, TWO, THREE;
+        ONE(1), TWO(2), THREE(3);
+
+        private int level;
+
+        /**
+         * The Elevator Level
+         * 
+         * @param level - Level in relation to Rocket levels
+         */
+        private Levels(int level) {
+            this.level = level;
+        }
+
+        /**
+         * Get the level as an integer
+         * 
+         * @return Level as an integer
+         */
+        public int getLevel() {
+            return level;
+        }
     }
 
     // The direction the elevator can travel in

@@ -255,19 +255,16 @@ public class LimeLightSubsystem extends Subsystem {
 		return table.getEntry("tcorny").getDoubleArray(new double[] { 0, 0, 0, 0 });
 	}
 
-	//
 	/**
 	 * Sets the Lime Light LED's
 	 * 
 	 * @param mode - LightMode (On, Off, Blinking, or determined by the pipeline)
 	 */
 	public void setLightState(LightMode mode) {
+		currentState = mode;
 		table.getEntry("ledMode").setNumber(currentState.getLedMode());
 	}
 
-	// True for human use, false for vision pipeline. Starts false
-	// Enabling this makes the exposure something you can easily see out of and
-	// disables vision processing
 	/**
 	 * Set the Lime Light Camera Mode
 	 * 
@@ -289,7 +286,7 @@ public class LimeLightSubsystem extends Subsystem {
 	}
 
 	/**
-	 * Sets the layout of the cameras viewed at 10.40.85.11:5800
+	 * Sets the layout of the cameras viewed at 10.56.67.11:5800
 	 * 
 	 * @param streamMode - STANDARD is side by side, MAIN is Limelight big with
 	 *                   secondary camera in bottom right, SECONDARY is vice versa
