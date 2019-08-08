@@ -15,12 +15,12 @@ import edu.wpi.first.wpilibj.PWMTalonSRX;
 import frc.robot.subsystems.elevator.ElevatorSubsystem;
 
 /**
- * Elevator JUnite tests
+ * Elevator JUnit tests
  */
 public class ElevatorTest {
 
     @Test
-    public void ElevatorLevelIncreaseTest() {
+    public void elevatorLevelIncreaseTest() {
         ElevatorSubsystem elevator = new ElevatorSubsystem(new PWMTalonSRX(0));
 
         elevator.increaseLevel();
@@ -36,7 +36,7 @@ public class ElevatorTest {
     }
 
     @Test
-    public void ElevatorLevelDecreaseTest() {
+    public void elevatorLevelDecreaseTest() {
         ElevatorSubsystem elevator = new ElevatorSubsystem(new PWMTalonSRX(1));
 
         elevator.increaseLevel();

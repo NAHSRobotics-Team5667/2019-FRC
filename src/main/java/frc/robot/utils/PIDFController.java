@@ -37,22 +37,50 @@ public class PIDFController {
 
     private double m_output;
 
+    private OutputFormat m_outputFormat;
+
+    public enum OutputFormat {
+        DEFAULT(0), CLAMP(1), MAP(2);
+
+        private int m_format;
+
+        /**
+         * The PID Controller Output format
+         * 
+         * @param format - The PID Controller Output format
+         */
+        private OutputFormat(int format) {
+            m_format = format;
+        }
+
+        /**
+         * Get the PID Controller Output format
+         * 
+         * @return the PID Controller output format
+         */
+        public int getFormat() {
+            return m_format;
+        }
+    }
+
     /**
-     * The PID Controller constructor
+     * The PID Controller constructor with specified output formatting
      * 
-     * @param name - The Subsystem name
-     * @param kP   - the Proportional gain
-     * @param kI   - the Integral gain
-     * @param kD   - the Derivative gain
-     * @param kF   - the Feed Forward gain
+     * @param name         - the Subsystem name
+     * @param kP           - the Proportional gain
+     * @param kI           - the Integral gain
+     * @param kD           - the Derivative gain
+     * @param kF           - the Feed Forward gain
+     * @param outputFormat - the PID Controller's Output Format
      */
-    public PIDFController(String name, double kP, double kI, double kD, double kF) {
+    public PIDFController(String name, double kP, double kI, double kD, double kF, OutputFormat outputFormat) {
         this.name = name;
         this.kP = kP;
         this.kI = kI;
         this.kD = kD;
         this.kF = kF;
         this.m_isEnabled = true;
+        this.m_outputFormat = outputFormat;
 
         m_EnabledChooser.setDefaultOption("Default", m_isEnabled);
         m_EnabledChooser.addOption("Disabled", false);
@@ -61,12 +89,25 @@ public class PIDFController {
     }
 
     /**
+     * The PID Controller constructor
+     * 
+     * @param name - the Subsystem name
+     * @param kP   - the Proportional gain
+     * @param kI   - the Integral gain
+     * @param kD   - the Derivative gain
+     * @param kF   - the Feed Forward gain
+     */
+    public PIDFController(String name, double kP, double kI, double kD, double kF) {
+        this(name, kP, kI, kD, kF, OutputFormat.DEFAULT);
+    }
+
+    /**
      * Create a blank PID Controller
      * 
      * @param name - The subsystem name
      */
     public PIDFController(String name) {
-        this(name, 0, 0, 0, 0);
+        this(name, 0, 0, 0, 0, OutputFormat.DEFAULT);
     }
 
     /**
@@ -76,7 +117,7 @@ public class PIDFController {
      * @param kP   - the proportional gain
      */
     public PIDFController(String name, double kP) {
-        this(name, kP, 0, 0, 0);
+        this(name, kP, 0, 0, 0, OutputFormat.DEFAULT);
     }
 
     /**
@@ -87,7 +128,7 @@ public class PIDFController {
      * @param kI   - the integral gain
      */
     public PIDFController(String name, double kP, double kI) {
-        this(name, kP, kI, 0, 0);
+        this(name, kP, kI, 0, 0, OutputFormat.DEFAULT);
     }
 
     /**
@@ -99,7 +140,7 @@ public class PIDFController {
      * @param kD   - the derivative gain
      */
     public PIDFController(String name, double kP, double kI, double kD) {
-        this(name, kP, kI, kD, 0);
+        this(name, kP, kI, kD, 0, OutputFormat.DEFAULT);
     }
 
     /**
@@ -252,7 +293,13 @@ public class PIDFController {
         m_totalError += m_error;
 
         m_output = kF + ((m_error * kP) + (m_totalError * kI) + ((deltaError / k_deltaTime) * kD));
-        m_output = clamp(m_output, m_MinOutput, m_MaxOutput);
+
+        if (m_outputFormat == OutputFormat.CLAMP) {
+            m_output = clamp(m_output, m_MinOutput, m_MaxOutput);
+        } else if (m_outputFormat == OutputFormat.MAP) {
+            m_output = map(m_output);
+        }
+
         m_lastError = m_error;
 
         return m_output;
@@ -279,6 +326,25 @@ public class PIDFController {
      */
     public void disable() {
         m_isEnabled = false;
+    }
+
+    /**
+     * Set the PID Controller's Output format
+     * 
+     * @param format - The way you would like the output to be formatted (default,
+     *               clamped, mapped)
+     */
+    public void setOutputFormat(OutputFormat format) {
+        this.m_outputFormat = format;
+    }
+
+    /**
+     * Get the PID Controller's Output Format
+     * 
+     * @return The PID Controller's output format
+     */
+    public OutputFormat getOutputFormat() {
+        return m_outputFormat;
     }
 
     /**
