@@ -19,19 +19,32 @@ import frc.robot.utils.Controller;
  */
 public class OI {
 
-	private static Controller controller;
+	private static Controller m_controller;
 
+	private Button m_aButton;
+	private Button m_bButton;
+
+	/**
+	 * The Operator Interface
+	 * 
+	 * @param controller_port - Port for XBox controller (default 0)
+	 */
 	public OI(int controller_port) {
-		controller = new Controller(controller_port);
+		m_controller = new Controller(controller_port);
 
-		Button aButton = new JoystickButton(controller, RobotMap.button_A_Port);
-		Button bButton = new JoystickButton(controller, RobotMap.button_B_Port);
+		m_aButton = new JoystickButton(m_controller, RobotMap.button_A_Port);
+		m_bButton = new JoystickButton(m_controller, RobotMap.button_B_Port);
 
-		aButton.whenPressed(new HatchCommand(RobotMap.HatchOutakeTime));
-		bButton.whenPressed(new CargoCommand(RobotMap.CargoOutakeTime));
+		m_aButton.whenPressed(new HatchCommand(RobotMap.HatchOutakeTime));
+		m_bButton.whenPressed(new CargoCommand(RobotMap.CargoOutakeTime));
 	}
 
+	/**
+	 * Get the XBox Controller Instance
+	 * 
+	 * @return the XBox Controller Instance
+	 */
 	public Controller getController() {
-		return controller;
+		return m_controller;
 	}
 }
