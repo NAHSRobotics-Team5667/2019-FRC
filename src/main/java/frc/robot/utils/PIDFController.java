@@ -7,6 +7,7 @@
 
 package frc.robot.utils;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -32,6 +33,7 @@ public class PIDFController {
     private double m_MaxInput;
 
     private boolean m_isEnabled;
+    private SendableChooser<Boolean> m_EnabledChooser = new SendableChooser<>();
 
     private double m_output;
 
@@ -51,6 +53,11 @@ public class PIDFController {
         this.kD = kD;
         this.kF = kF;
         this.m_isEnabled = true;
+
+        m_EnabledChooser.setDefaultOption("Default", m_isEnabled);
+        m_EnabledChooser.addOption("Disabled", false);
+        m_EnabledChooser.addOption("Enabled", true);
+
     }
 
     /**
@@ -278,11 +285,15 @@ public class PIDFController {
      * Output diagnostics
      */
     public void outputTelemetry() {
+        m_EnabledChooser.setDefaultOption("Default", m_isEnabled);
+        SmartDashboard.putData(name + "_PID", m_EnabledChooser);
+
         SmartDashboard.putNumber(name + "_P", kP);
         SmartDashboard.putNumber(name + "_I", kI);
         SmartDashboard.putNumber(name + "_D", kD);
         SmartDashboard.putNumber(name + "_F", kF);
         SmartDashboard.putNumber(name + "_O", m_output);
+
     }
 
     /**
@@ -293,6 +304,13 @@ public class PIDFController {
         setI(SmartDashboard.getNumber(name + "_I", kI));
         setD(SmartDashboard.getNumber(name + "_D", kD));
         setF(SmartDashboard.getNumber(name + "_F", kF));
+
+        if (m_EnabledChooser.getSelected()) {
+            enable();
+        } else {
+            disable();
+        }
+
     }
 
 }

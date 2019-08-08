@@ -32,12 +32,9 @@ public class MecanumDriveCommand extends Command {
 	protected void initialize() {
 		Robot.DriveTrain.stop();
 
-		xController = new PIDFController("X_DRIVE", 0.1, 0.01, 0, 0);
-		yController = new PIDFController("Y_DRIVE", 0.1, 0.1, 0, 0);
-		zController = new PIDFController("Z_DRIVE", 0.1, 0.001, 0, 0);
-
-		yController.disable();
-		zController.disable();
+		xController = new PIDFController("X_DRIVE", 0.001, 0, 0, 0);
+		yController = new PIDFController("Y_DRIVE", 0.01, 0, 0, 0);
+		zController = new PIDFController("Z_DRIVE", 0.003, 0, 0, 0);
 
 		xController.setOutputRange(-0.3, 0.3);
 		yController.setOutputRange(-0.3, 0.3);
@@ -54,15 +51,15 @@ public class MecanumDriveCommand extends Command {
 		xController.setSetPoint(0);
 		yController.setSetPoint(0);
 		zController.setSetPoint(0);
-
-		xController.outputTelemetry();
-		yController.outputTelemetry();
-		zController.outputTelemetry();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
+
+		xController.outputTelemetry();
+		yController.outputTelemetry();
+		zController.outputTelemetry();
 
 		if (Robot.m_oi.getController().getYButton()) {
 			Robot.DriveTrain.setDriveMode(DriveMode.AUTO);
@@ -81,11 +78,9 @@ public class MecanumDriveCommand extends Command {
 			double leftCorner = yCorners[1];
 			double rightCorner = yCorners[0];
 
-			double x = !xController.onTarget() ? -xController.calculate(LimeLightSubsystem.getInstance().getXAngle())
-					: 0;
-			double y = !yController.onTarget() ? -yController.calculate(LimeLightSubsystem.getInstance().getYAngle())
-					: 0;
-			double z = !zController.onTarget() ? zController.calculate(LimeLightSubsystem.getInstance().getSkew()) : 0;
+			double x = -xController.calculate(LimeLightSubsystem.getInstance().getXAngle());
+			double y = -yController.calculate(LimeLightSubsystem.getInstance().getYAngle());
+			double z = zController.calculate(LimeLightSubsystem.getInstance().getSkew());
 
 			if (leftCorner < rightCorner) {
 				// Check which way we need to rotate (left or right)
