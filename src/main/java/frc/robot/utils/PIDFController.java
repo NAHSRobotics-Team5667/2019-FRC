@@ -33,6 +33,8 @@ public class PIDFController {
 
     private boolean m_isEnabled;
 
+    private double m_output;
+
     /**
      * The PID Controller constructor
      * 
@@ -218,7 +220,6 @@ public class PIDFController {
         m_MaxOutput = max;
     }
 
-    //
     /**
      * Returns the last error recorded when calculate was last called
      * 
@@ -243,11 +244,11 @@ public class PIDFController {
         double deltaError = m_error - m_lastError;
         m_totalError += m_error;
 
-        double output = kF + ((m_error * kP) + (m_totalError * kI) + ((deltaError / k_deltaTime) * kD));
-        output = clamp(output, m_MinOutput, m_MaxOutput);
+        m_output = kF + ((m_error * kP) + (m_totalError * kI) + ((deltaError / k_deltaTime) * kD));
+        m_output = clamp(m_output, m_MinOutput, m_MaxOutput);
         m_lastError = m_error;
 
-        return output;
+        return m_output;
     }
 
     /**
@@ -281,7 +282,7 @@ public class PIDFController {
         SmartDashboard.putNumber(name + "_I", kI);
         SmartDashboard.putNumber(name + "_D", kD);
         SmartDashboard.putNumber(name + "_F", kF);
-
+        SmartDashboard.putNumber(name + "_O", m_output);
     }
 
     /**

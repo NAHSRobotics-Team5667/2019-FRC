@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
 import frc.robot.subsystems.drivetrain.MecanumDriveSubsystem.DriveMode;
 import frc.robot.subsystems.vision.LimeLightSubsystem;
-import frc.robot.subsystems.vision.LimeLightSubsystem.LightMode;
 import frc.robot.utils.PIDFController;
 
 public class MecanumDriveCommand extends Command {
@@ -67,11 +66,11 @@ public class MecanumDriveCommand extends Command {
 
 		if (Robot.m_oi.getController().getYButton()) {
 			Robot.DriveTrain.setDriveMode(DriveMode.AUTO);
-			LimeLightSubsystem.getInstance().setLightState(LightMode.ON);
+			LimeLightSubsystem.getInstance().turnLightOn();
 
 		} else {
 			Robot.DriveTrain.setDriveMode(DriveMode.MANUAL);
-			LimeLightSubsystem.getInstance().setLightState(LightMode.OFF);
+			LimeLightSubsystem.getInstance().turnLightOff();
 
 		}
 
