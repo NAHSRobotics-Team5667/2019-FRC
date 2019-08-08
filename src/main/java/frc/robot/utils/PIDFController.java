@@ -20,7 +20,7 @@ public class PIDFController {
     private double kP, kI, kD, kF;
 
     private double m_setpoint;
-    private double m_lastError;
+    private double m_lastError = 0;
     private double m_totalError;
     private double m_error;
     private double m_tolerance;
@@ -215,8 +215,12 @@ public class PIDFController {
         m_MaxOutput = max;
     }
 
-    // Returns the last error recorded when calculate was last called
-    // If called in the robot loop, should be every 0.02 seconds
+    //
+    /**
+     * Returns the last error recorded when calculate was last called
+     * 
+     * @return the last error recorded when calculate was last called
+     */
     public double getError() {
         return m_error;
     }
@@ -233,7 +237,7 @@ public class PIDFController {
         double deltaError = m_error - m_lastError;
         m_totalError += m_error;
 
-        double output = kF + ((m_error * kP) + (m_totalError * kI) - ((deltaError / k_deltaTime) * kD));
+        double output = kF + ((m_error * kP) + (m_totalError * kI) + ((deltaError / k_deltaTime) * kD));
         output = clamp(output, m_MinOutput, m_MaxOutput);
         m_lastError = m_error;
 
