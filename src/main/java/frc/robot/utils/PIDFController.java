@@ -82,9 +82,8 @@ public class PIDFController {
         this.m_isEnabled = true;
         this.m_outputFormat = outputFormat;
 
-        m_EnabledChooser.setDefaultOption("Default", m_isEnabled);
-        m_EnabledChooser.addOption("Disabled", false);
-        m_EnabledChooser.addOption("Enabled", true);
+        m_EnabledChooser.setDefaultOption(m_isEnabled ? "Enabled" : "Disabled", m_isEnabled);
+        m_EnabledChooser.addOption(!m_isEnabled ? "Enabled" : "Disabled", !m_isEnabled);
 
     }
 
@@ -351,7 +350,6 @@ public class PIDFController {
      * Output diagnostics
      */
     public void outputTelemetry() {
-        m_EnabledChooser.setDefaultOption("Default", m_isEnabled);
         SmartDashboard.putData(name + "_PID", m_EnabledChooser);
 
         SmartDashboard.putNumber(name + "_P", kP);
@@ -371,11 +369,7 @@ public class PIDFController {
         setD(SmartDashboard.getNumber(name + "_D", kD));
         setF(SmartDashboard.getNumber(name + "_F", kF));
 
-        if (m_EnabledChooser.getSelected()) {
-            enable();
-        } else {
-            disable();
-        }
+        m_isEnabled = m_EnabledChooser.getSelected();
 
     }
 

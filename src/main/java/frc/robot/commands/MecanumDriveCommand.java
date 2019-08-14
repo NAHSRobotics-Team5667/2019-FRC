@@ -14,6 +14,7 @@ import frc.robot.Robot;
 import frc.robot.subsystems.drivetrain.MecanumDriveSubsystem.DriveMode;
 import frc.robot.subsystems.vision.LimeLightSubsystem;
 import frc.robot.utils.PIDFController;
+import frc.robot.utils.PIDFController.OutputFormat;
 
 public class MecanumDriveCommand extends Command {
 
@@ -32,9 +33,9 @@ public class MecanumDriveCommand extends Command {
 	protected void initialize() {
 		Robot.DriveTrain.stop();
 
-		xController = new PIDFController("X_DRIVE", 0.001, 0, 0, 0);
-		yController = new PIDFController("Y_DRIVE", 0.01, 0, 0, 0);
-		zController = new PIDFController("Z_DRIVE", 0.003, 0, 0, 0);
+		xController = new PIDFController("X_DRIVE", 0.5, 0, 0, 0, OutputFormat.CLAMP);
+		yController = new PIDFController("Y_DRIVE", 0.05, 0.005, 0, 0, OutputFormat.CLAMP);
+		zController = new PIDFController("Z_DRIVE", 0.001, 0, 0, 0, OutputFormat.CLAMP);
 
 		xController.setOutputRange(-0.3, 0.3);
 		yController.setOutputRange(-0.3, 0.3);
@@ -56,10 +57,6 @@ public class MecanumDriveCommand extends Command {
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-
-		xController.outputTelemetry();
-		yController.outputTelemetry();
-		zController.outputTelemetry();
 
 		if (Robot.m_oi.getController().getYButton()) {
 			Robot.DriveTrain.setDriveMode(DriveMode.AUTO);
@@ -99,6 +96,9 @@ public class MecanumDriveCommand extends Command {
 		yController.readTelemetry();
 		zController.readTelemetry();
 
+		xController.outputTelemetry();
+		yController.outputTelemetry();
+		zController.outputTelemetry();
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

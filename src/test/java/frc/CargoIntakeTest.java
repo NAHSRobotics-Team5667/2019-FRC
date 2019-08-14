@@ -5,14 +5,14 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package tests;
+package frc;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
 import edu.wpi.first.wpilibj.Solenoid;
-import frc.robot.subsystems.intakes.CargoSubystem;
+import frc.robot.subsystems.intakes.CargoSubsystem;
 
 /**
  * Cargo Intake JUnit tests
@@ -21,7 +21,7 @@ public class CargoIntakeTest {
 
     @Test
     public void CargoIntakeTestTrue() {
-        CargoSubystem cargoIntake = new CargoSubystem(new Solenoid(2), true);
+        CargoSubsystem cargoIntake = new CargoSubsystem(new Solenoid(2), true);
 
         cargoIntake.enablePiston();
         assertEquals(cargoIntake.getStatus(), true);
@@ -35,7 +35,7 @@ public class CargoIntakeTest {
 
     @Test
     public void CargoIntakeTestFalse() {
-        CargoSubystem cargoIntake = new CargoSubystem(new Solenoid(3), false);
+        CargoSubsystem cargoIntake = new CargoSubsystem(new Solenoid(3), false);
 
         cargoIntake.enablePiston();
         assertEquals(cargoIntake.getStatus(), false);

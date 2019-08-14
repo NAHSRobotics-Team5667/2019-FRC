@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package test;
+package frc;
 
 import static org.junit.Assert.assertEquals;
 
