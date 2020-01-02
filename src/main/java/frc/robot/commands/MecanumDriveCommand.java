@@ -9,20 +9,20 @@ package frc.robot.commands;
 
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.drivetrain.MecanumDriveSubsystem;
 import frc.robot.subsystems.drivetrain.MecanumDriveSubsystem.DriveMode;
 import frc.robot.subsystems.vision.LimeLightSubsystem;
-import frc.robot.utils.PIDFController;
 
 public class MecanumDriveCommand extends CommandBase {
 
   private MecanumDriveSubsystem DriveTrain;
 
-  private PIDFController xController;
-  private PIDFController yController;
-  private PIDFController zController;
+  private PIDController xController = new PIDController(.001, 0, 0);
+  private PIDController yController = new PIDController(0.01, 0, 0);
+  private PIDController zController = new PIDController(.0003, 0, 0);
 
   /**
    * Creates A Mecanum Drivetrain command
@@ -41,36 +41,18 @@ public class MecanumDriveCommand extends CommandBase {
   public void initialize() {
     this.DriveTrain.stop();
 
-    /**
-     * Set PID Constants (Need to refactor to use new PID class)
-     */
-    xController = new PIDFController("X_DRIVE", 0.001, 0, 0, 0);
-    yController = new PIDFController("Y_DRIVE", 0.01, 0, 0, 0);
-    zController = new PIDFController("Z_DRIVE", 0.003, 0, 0, 0);
-
-    xController.setOutputRange(-0.3, 0.3);
-    yController.setOutputRange(-0.3, 0.3);
-    zController.setOutputRange(-0.3, 0.3);
-
-    xController.setInputRange(-27, 27); // Horizontal offset
-    yController.setInputRange(-20.5, 20.5); // Vertical offset
-    zController.setInputRange(-90, 0); // Skew or rotation
-
     xController.setTolerance(0.1);
     yController.setTolerance(0.1);
     zController.setTolerance(1);
 
-    xController.setSetPoint(0);
-    yController.setSetPoint(0);
-    zController.setSetPoint(0);
+    xController.setSetpoint(0);
+    yController.setSetpoint(0);
+    zController.setSetpoint(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    xController.outputTelemetry();
-    yController.outputTelemetry();
-    zController.outputTelemetry();
 
     if (RobotContainer.getController().getYButton()) {
       DriveTrain.setDriveMode(DriveMode.AUTO);
@@ -105,10 +87,6 @@ public class MecanumDriveCommand extends CommandBase {
       Map<String, Double> sticks = RobotContainer.getController().getSticks();
       DriveTrain.driveCartesian(sticks.get("LSX"), sticks.get("LSY"), sticks.get("RSX"));
     }
-
-    xController.readTelemetry();
-    yController.readTelemetry();
-    zController.readTelemetry();
 
   }
 

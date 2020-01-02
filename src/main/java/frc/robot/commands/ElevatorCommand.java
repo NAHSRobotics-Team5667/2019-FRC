@@ -10,18 +10,16 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.elevator.ElevatorConstants;
-import frc.robot.subsystems.elevator.ElevatorSubsystem;
-import frc.robot.utils.PIDFController;
+import frc.robot.subsystems.elevator.ElevatorPIDSubsystem;
 
 public class ElevatorCommand extends CommandBase {
 
-  private PIDFController pidfController = new PIDFController("Elevator", 3.5, 0, 0, .1);
-  private ElevatorSubsystem Elevator;
+  private ElevatorPIDSubsystem Elevator;
 
   /**
    * Creates a new ElevatorCommand.
    */
-  public ElevatorCommand(ElevatorSubsystem Elevator) {
+  public ElevatorCommand(ElevatorPIDSubsystem Elevator) {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Elevator);
     this.Elevator = Elevator;
@@ -38,10 +36,12 @@ public class ElevatorCommand extends CommandBase {
   public void execute() {
     // Manual Elevator drive
     if (RobotContainer.getController().getRightTrigger() != 0) {
+      Elevator.disable();
       Elevator.setDriveMode(ElevatorConstants.DriveModes.MANUAL);
       Elevator.driveElevatorByDirection(ElevatorConstants.ElevatorDirection.UP);
 
     } else if (RobotContainer.getController().getLeftTrigger() != 0) {
+      Elevator.disable();
       Elevator.setDriveMode(ElevatorConstants.DriveModes.MANUAL);
       Elevator.driveElevatorByDirection(ElevatorConstants.ElevatorDirection.DOWN);
 
@@ -50,18 +50,18 @@ public class ElevatorCommand extends CommandBase {
       if (RobotContainer.getController().getRightBumperPressed()) {
         Elevator.setDriveMode(ElevatorConstants.DriveModes.AUTO);
         Elevator.increaseLevel();
-        pidfController.setSetPoint(Elevator.getHeightFromLevel(Elevator.getCurrentLevel()));
+        Elevator.setSetpoint(Elevator.getHeightFromLevel(Elevator.getCurrentLevel()));
 
       } else if (RobotContainer.getController().getLeftBumperPressed()) {
         Elevator.setDriveMode(ElevatorConstants.DriveModes.AUTO);
         Elevator.decreaseLevel();
-        pidfController.setSetPoint(Elevator.getHeightFromLevel(Elevator.getCurrentLevel()));
+        Elevator.setSetpoint(Elevator.getHeightFromLevel(Elevator.getCurrentLevel()));
 
       } else if (Elevator.getDriveMode() == ElevatorConstants.DriveModes.MANUAL) {
         Elevator.stop();
 
       } else {
-        Elevator.driveElevatorBySpeed(pidfController.calculate(Elevator.getCurrentHeight()));
+        Elevator.enable();
       }
     }
 

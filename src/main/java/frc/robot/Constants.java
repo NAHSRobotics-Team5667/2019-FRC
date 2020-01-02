@@ -28,6 +28,7 @@ public final class Constants {
         public static final double e_SPEEDUP = 1; // The motor speed when the elevator is traveling up
         public static final double e_SPEEDDOWN = -.7; // The motor speed when elevator is traveling down
         public static final double[] e_LEVELS = { .1, .95, 1.45 }; // Rocket heights in meters
+        public static final double kP = 3.5, kI = 0, kD = 0, kF = .1;
 
     }
 

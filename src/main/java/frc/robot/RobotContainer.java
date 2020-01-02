@@ -21,7 +21,7 @@ import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.HatchCommand;
 import frc.robot.commands.MecanumDriveCommand;
 import frc.robot.subsystems.drivetrain.MecanumDriveSubsystem;
-import frc.robot.subsystems.elevator.ElevatorSubsystem;
+import frc.robot.subsystems.elevator.ElevatorPIDSubsystem;
 import frc.robot.subsystems.intakes.CargoSubsystem;
 import frc.robot.subsystems.intakes.HatchSubsystem;
 import frc.robot.subsystems.vision.CameraSubsystem;
@@ -40,7 +40,7 @@ public class RobotContainer {
   private static Controller m_controller = new Controller(Constants.ControllerConstants.controllerPort);
 
   private static MecanumDriveSubsystem Drivetrain;
-  private static ElevatorSubsystem Elevator;
+  private static ElevatorPIDSubsystem Elevator;
 
   private static HatchSubsystem HatchIntake = new HatchSubsystem(new Solenoid(Constants.IntakeConstants.HatchSolenoid));
   private static CargoSubsystem CargoIntake = new CargoSubsystem(new Solenoid(Constants.IntakeConstants.CargoSolenoid));
@@ -60,8 +60,11 @@ public class RobotContainer {
         new PWMTalonSRX(Constants.DriveTrainConstants.frontRightMotor),
         new PWMTalonSRX(Constants.DriveTrainConstants.rearRightMotor));
 
-    Elevator = new ElevatorSubsystem(new PWMTalonSRX(Constants.ElevatorConstants.ElevatorPWM), false,
-        new Encoder(Constants.ElevatorConstants.ElevatorEncoderA, Constants.ElevatorConstants.ElevatorEncoderB));
+    Elevator = new ElevatorPIDSubsystem(new PWMTalonSRX(Constants.ElevatorConstants.ElevatorPWM), false,
+        Constants.ElevatorConstants.e_LEVELS,
+        new Encoder(Constants.ElevatorConstants.ElevatorEncoderA, Constants.ElevatorConstants.ElevatorEncoderB),
+        Constants.ElevatorConstants.kP, Constants.ElevatorConstants.kI, Constants.ElevatorConstants.kD,
+        Constants.ElevatorConstants.kF);
 
     Drivetrain.setDefaultCommand(new MecanumDriveCommand(Drivetrain));
     Elevator.setDefaultCommand(new ElevatorCommand(Elevator));
@@ -103,7 +106,6 @@ public class RobotContainer {
 
   public void outputTelemetry() {
     // Output the diagnostics for all necessary Subsystems!
-    Elevator.outputTelemetry();
     HatchIntake.outputTelemetry();
     CargoIntake.outputTelemetry();
     LimeLightSubsystem.getInstance().outputTelemetry();

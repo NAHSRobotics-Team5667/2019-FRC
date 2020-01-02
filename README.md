@@ -10,8 +10,8 @@
 
 * [DriveTrain](src/main/java/frc/robot/subsystems/drivetrain/MecanumDriveSubsystem.java)
   * Mecanum drive subsystem
-* [Elevator](src/main/java/frc/robot/subsystems/elevator/ElevatorSubsystem.java)
-  * Elevator subsystem with PIDF controller implemented
+* [Elevator](src/main/java/frc/robot/subsystems/elevator/ElevatorPIDSubsystem.java)
+  * Elevator subsystem with PID controller implemented
 * [Cargo Intake](src/main/java/frc/robot/subsystems/intakes/CargoSubsystem.java)
   * The dog cone intake subsystem
 * [Hatch Intake](src/main/java/frc/robot/subsystems/intakes/HatchSubystem.java)
@@ -34,9 +34,6 @@
 
 * [XBOX Controller](src/main/java/frc/robot/utils/Controller.java)
   * Custom XBOX controller class for added functionality
-* [PIDF Controller](src/main/java/frc/robot/utils/PIDFController.java)
-  * Custom PIDF Controller
-
 
 Visit our site at [nahsrobotics.org](https://nahsrobotics.org)
 
